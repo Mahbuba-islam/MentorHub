@@ -1,0 +1,25 @@
+// code prisma translate kore sql query te convert korbe 
+tarpor sql query database er sathe kotha bolbe
+
+prisma orm -- next generation orm, open source, 
+node js and type script er sathe valo kaj kore, type safety provide kore
+** indexing kora hoi jate kono akta jinis search korle fast data niye asa jai
+
+step :
+1. prisma instalation, express, node install
+2. config file setup
+3. in .env file connect database
+4. schema create/model create and indexing 
+5. migrate kora(npx prisma migrate dev)
+6.generate
+7. create instance prisma client
+8. create server
+9.create app
+10.api create
+
+
+
+// one user one profile
+
+one teacher -- many teacher 
+one category === many category
