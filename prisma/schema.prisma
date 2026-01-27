@@ -1,14 +1,20 @@
 // -----------------------------
 // Prisma Client Generator
 // -----------------------------
+
 generator client {
   provider = "prisma-client"
-  output   = "../../src/generated/prisma"
+  output   = "../src/generated"
 }
+
+// generator client {
+//   provider = "prisma-client-js"
+// }
 
 // -----------------------------
 // Database Connection
 // -----------------------------
+
 datasource db {
   provider = "postgresql"
 }
@@ -16,87 +22,11 @@ datasource db {
 // -----------------------------
 // Enums
 // -----------------------------
+
 enum Role {
   STUDENT
   TUTOR
   ADMIN
-}
-
-// -----------------------------
-// User & Auth Models (Better Auth)
-// -----------------------------
-model User {
-  id            String  @id
-  name          String
-  email         String  @unique
-  emailVerified Boolean @default(false)
-  role          Role    @default(STUDENT)
-
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  sessions     Session[]
-  accounts     Account[]
-  tutorProfile TutorProfile?
-  bookings     Booking[]
-  reviews      Review[]
-
-  @@map("user")
-}
-
-//session
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId    String
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@map("session")
-}
-
-//account
-
-model Account {
-  id         String @id
-  accountId  String
-  providerId String
-  userId     String
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-
-  @@index([userId])
-  @@map("account")
-}
-
-//verification
-model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([identifier])
-  @@map("verification")
 }
 
 // TUTOR PROFILE
@@ -104,7 +34,7 @@ model Verification {
 model TutorProfile {
   id         String   @id @default(uuid())
   userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
   bio        String?
@@ -166,4 +96,70 @@ model Review {
   rating    Int
   comment   String?
   createdAt DateTime     @default(now())
+}
+
+model User {
+  id String @id @default(uuid())
+
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  bookings      Booking[]
+  reviews       Review[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
