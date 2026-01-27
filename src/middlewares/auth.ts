@@ -27,11 +27,12 @@ export enum userRole {
  const auth = (...roles:userRole[]) => {
    return async(req:Request,res:Response,next:NextFunction)=>{
     
-    //get user session
+try{
+     //get user session
     const session = await betterAuth.api.getSession({
-        headers:req.header as any
+        headers:req.headers as any
     })
-  
+  console.log('S',session);
     if(!session){
         return res.status(401).json({
             success:false,
@@ -39,7 +40,7 @@ export enum userRole {
         })
     }
 
-    if(session.user.emailVerified){
+    if(!session.user.emailVerified){
           return res.status(403).json({
             success:false,
             message:"Email verification required. please verify your email!"
@@ -62,6 +63,10 @@ export enum userRole {
    }
 
    next()
+}
+catch(e){
+ next(e)
+}
 
     }
 
