@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "user" ADD COLUMN     "phone" TEXT,
+ADD COLUMN     "role" TEXT NOT NULL DEFAULT 'STUDENT',
+ADD COLUMN     "status" TEXT DEFAULT 'ACTIVE';
+
+-- DropEnum
+DROP TYPE "Role";

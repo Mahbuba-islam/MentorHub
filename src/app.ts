@@ -5,8 +5,14 @@ import { tutorRouter } from "./modules/tutors/tutors.router"
 import { categoryRouter } from "./modules/category/router.category"
 import { errorHandler } from "./middlewares/errorHandler"
 import { notFound } from "./middlewares/notFound"
+import cors from 'cors'
 
 const app = express()
+
+app.use(cors({
+ origin:process.env.APP_URL,
+ credentials:true
+}))
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
 

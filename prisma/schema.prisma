@@ -23,12 +23,6 @@ datasource db {
 // Enums
 // -----------------------------
 
-enum Role {
-  STUDENT
-  TUTOR
-  ADMIN
-}
-
 // TUTOR PROFILE
 
 model TutorProfile {
@@ -111,6 +105,10 @@ model User {
   accounts      Account[]
   bookings      Booking[]
   reviews       Review[]
+
+  role   String  @default("STUDENT")
+  phone  String?
+  status String? @default("ACTIVE")
 
   @@unique([email])
   @@map("user")

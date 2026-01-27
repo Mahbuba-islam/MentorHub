@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { tutorControler } from "./tutors.controler";
+import auth, { userRole } from "../../middlewares/auth";
 
 const router = Router()
 
-router.post("/", tutorControler.createTutors)
+router.post("/", auth(userRole.TUTOR), tutorControler.createTutors)
 
 export const tutorRouter = router
