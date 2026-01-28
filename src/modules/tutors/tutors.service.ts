@@ -106,6 +106,74 @@ const getTutorDetails = async(id:string) => {
 
 
 
+
+//get tutor dashboard data
+
+const getTutorDashboardData = async (tutorId: string) => {
+  const now = new Date();
+
+  // Upcoming sessions
+  const upcoming = await prisma.booking.findMany({
+    where: {
+      tutorId,
+      date: { gte: now },
+      status: "CONFIRMED"
+    },
+    include: {
+      student: { select: { name: true, image: true } }
+    },
+    orderBy: { date: "asc" }
+  });
+
+  // Past sessions
+  const past = await prisma.booking.findMany({
+    where: {
+      tutorId,
+      OR: [
+        { date: { lt: now } },
+        { status: "COMPLETED" }
+      ]
+    },
+    include: {
+      student: { select: { name: true, image: true } }
+    },
+    orderBy: { date: "desc" }
+  });
+
+  // Stats
+  const totalSessions = await prisma.booking.count({ where: { tutorId } });
+
+  const totalStudents = await prisma.booking.findMany({
+    where: { tutorId },
+    select: { studentId: true },
+    distinct: ["studentId"]
+  });
+
+  const tutorProfile = await prisma.tutorProfile.findUnique({
+    where: { id: tutorId },
+    select: {
+      rating: true,
+      totalReviews: true
+    }
+  });
+
+  return {
+    sessions: {
+      upcoming,
+      past
+    },
+    stats: {
+      totalSessions,
+      totalStudents: totalStudents.length,
+      averageRating: tutorProfile?.rating || 0,
+      totalReviews: tutorProfile?.totalReviews || 0,
+      upcomingCount: upcoming.length,
+      pastCount: past.length
+    }
+  };
+};
+
+
 //create tutors
 
 const createTutors = async (data:TutorProfile, userId:string) => {
@@ -126,6 +194,7 @@ export const tutorsService = {
     getTutors ,
     getTutorDetails,
     findFeaturedTutors ,
-    createTutors
+    createTutors,
+    getTutorDashboardData
 
 }

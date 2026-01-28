@@ -5,6 +5,7 @@ import auth, { userRole } from "../../middlewares/auth";
 const router = Router()
 
 router.get("/", tutorControler.getTutors)
+router.get("/dashboard", auth(userRole.TUTOR), tutorControler.getTutorDashboard);
 
 router.get("/featured", tutorControler.getFeaturedTutors);
 

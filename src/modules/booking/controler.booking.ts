@@ -14,12 +14,12 @@ const getAllBookings = async (req:Request, res:Response, next:NextFunction) => {
     }
 
 
-    if (req.user.role !== userRole.USER) {
-      return res.status(403).json({ message: "Only students can view bookings" });
-    }
+    // if (req.user.role !== userRole.USER) {
+    //   return res.status(403).json({ message: "Only students can view bookings" });
+    // }
 
 
-    const bookings = await bookingService.getAllBookingsForStudent(req.user.id);
+    const bookings = await bookingService.getAllBookingsForStudent();
 
     res.status(200).json({ success: true, data: bookings });
   } catch (error) {

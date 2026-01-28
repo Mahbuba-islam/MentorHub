@@ -56,6 +56,28 @@ const getTutorDetails = async(req:Request, res:Response, next:NextFunction)=> {
 
 
 
+//get tutor dashboard data
+const getTutorDashboard = async (req: Request, res: Response, next:NextFunction) => {
+  try {
+
+   if(!req.user){
+     return res.status(400).json({
+        error:"Unothorized",
+      })
+    }
+    const tutorId = req.user.id;
+ 
+    const data = await tutorsService.getTutorDashboardData(tutorId);
+
+    return res.json({
+      success: true,
+      data
+    });
+  } catch (error) {
+   next(error)
+  }
+};
+
 
 
 
@@ -89,6 +111,7 @@ const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
 export const tutorControler = {
     getTutors,
     getTutorDetails,
+    getTutorDashboard,
     getFeaturedTutors,
     createTutors
 }

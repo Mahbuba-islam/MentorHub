@@ -31,7 +31,8 @@ app.get("/", (req, res)=> {
 app.use("/tutors", tutorRouter)
 app.use("/category", categoryRouter)
 app.use("/review", reviewRouter)
-app.use("/dashboard/bookings", bookingRouter)
+
+app.use("/bookings", bookingRouter)
 
 app.use(notFound)
 app.use(errorHandler)

@@ -7,6 +7,6 @@ const router = Router()
 
 
 router.post("/", auth(userRole.USER), bookingControler.createBooking)
-router.get("/", auth(userRole.USER), bookingControler.createBooking)
+router.get("/", auth(), bookingControler.getAllBookings)
 
 export const bookingRouter = router

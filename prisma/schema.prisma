@@ -36,10 +36,11 @@ model TutorProfile {
   rating     Float?   @default(0)
   subject    String[]
 
-  totalReviews Int       @default(0)
-  isFeatured   Boolean   @default(false)
-  bookings     Booking[]
-  reviews      Review[]
+  totalReviews Int     @default(0)
+  isFeatured   Boolean @default(false)
+
+  reviews  Review[]
+  bookings Booking[]
 }
 
 model Availability {
@@ -65,12 +66,13 @@ model Booking {
   student   User   @relation("StudentBookings", fields: [studentId], references: [id])
 
   tutorId String
-  tutor   TutorProfile  @relation(fields: [tutorId], references: [id])
-  date    DateTime
-  time    String
-  status  BookingStatus @default(CONFIRMED)
-  user    User?         @relation(fields: [userId], references: [id])
-  userId  String?
+  tutor   TutorProfile @relation(fields: [tutorId], references: [id])
+
+  date   DateTime
+  time   String
+  status BookingStatus @default(CONFIRMED)
+  user   User?         @relation(fields: [userId], references: [id])
+  userId String?
 
   @@index([studentId])
   @@index([tutorId])

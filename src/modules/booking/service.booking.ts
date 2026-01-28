@@ -7,47 +7,69 @@ import { prisma } from "../../lib/prisma";
 
 
 
-const getAllBookingsForStudent = async (studentId: string) => {
-  const now = new Date();
+// const getAllBookingsForStudent = async (studentId: string) => {
+//   const now = new Date();
 
-  // Upcoming bookings
-  const upcoming = await prisma.booking.findMany({
+//   // Upcoming bookings
+//   const upcoming = await prisma.booking.findMany({
+//     where: {
+//       studentId,
+//       date: { gte: now },
+//       status: "CONFIRMED"
+//     },
+//     // include: {
+//     //   tutor: {
+//     //     include: {
+//     //       user: { select: { name: true, image: true } }
+//     //     }
+//     //   }
+//     // },
+//     orderBy: { date: "asc" }
+//   });
+
+//   // Past bookings
+//   const past = await prisma.booking.findMany({
+//     where: {
+//       studentId,
+//       OR: [
+//         { date: { lt: now } },
+//         { status: "COMPLETED" }
+//       ]
+//     },
+//     // include: {
+//     //   tutor: {
+//     //     include: {
+//     //       user: { select: { name: true, image: true } }
+//     //     }
+//     //   }
+//     // },
+//     orderBy: { date: "desc" }
+//   });
+
+//   return { upcoming, past };
+// };
+
+const getAllBookingsForStudent = async () => {
+  
+    try {
+   const results = await prisma.booking.findMany({
     where: {
-      studentId,
-      date: { gte: now },
+     
+      
       status: "CONFIRMED"
     },
-    include: {
-      tutor: {
-        include: {
-          user: { select: { name: true, image: true } }
-        }
-      }
-    },
+    
     orderBy: { date: "asc" }
   });
+  return results
+} catch (err) {
+  console.error("Prisma error:", err);
+  throw err;
+}
 
-  // Past bookings
-  const past = await prisma.booking.findMany({
-    where: {
-      studentId,
-      OR: [
-        { date: { lt: now } },
-        { status: "COMPLETED" }
-      ]
-    },
-    include: {
-      tutor: {
-        include: {
-          user: { select: { name: true, image: true } }
-        }
-      }
-    },
-    orderBy: { date: "desc" }
-  });
+    
+}
 
-  return { upcoming, past };
-};
 
 
 
@@ -67,14 +89,14 @@ const getAllBookingsForStudent = async (studentId: string) => {
       tutorId: data.tutorId,
       studentId: data.studentId,
     },
-    include: {
-      tutor: {
-        select: { id: true, rating: true }
-      },
-      student: {
-        select: { name: true, email: true }
-      }
-    }
+    // include: {
+    //   tutor: {
+    //     select: { id: true, rating: true }
+    //   },
+    //   student: {
+    //     select: { name: true, email: true }
+    //   }
+    // }
   });
   return results
 };
