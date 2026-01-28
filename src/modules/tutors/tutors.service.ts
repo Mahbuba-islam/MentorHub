@@ -85,6 +85,27 @@ const getTutorDetails = async(id:string) => {
 }
 
 
+
+
+// featured tutors
+
+ const findFeaturedTutors = async () => {
+  return prisma.tutorProfile.findMany({
+    where: { isFeatured: true },
+    include: {
+      user: {
+        select: { name: true, email: true, image: true }
+      },
+      category: {
+        select: { name: true }
+      }
+    },
+    orderBy: { rating: "desc" }
+  });
+};
+
+
+
 //create tutors
 
 const createTutors = async (data:TutorProfile, userId:string) => {
@@ -104,6 +125,7 @@ const createTutors = async (data:TutorProfile, userId:string) => {
 export const tutorsService = {
     getTutors ,
     getTutorDetails,
+    findFeaturedTutors ,
     createTutors
 
 }

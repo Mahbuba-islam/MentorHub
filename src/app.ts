@@ -7,6 +7,7 @@ import { errorHandler } from "./middlewares/errorHandler"
 import { notFound } from "./middlewares/notFound"
 import cors from 'cors'
 import { reviewRouter } from "./modules/review/router.review"
+import { bookingRouter } from "./modules/booking/router.booking"
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.get("/", (req, res)=> {
 app.use("/tutors", tutorRouter)
 app.use("/category", categoryRouter)
 app.use("/review", reviewRouter)
+app.use("/dashboard/bookings", bookingRouter)
 
 app.use(notFound)
 app.use(errorHandler)

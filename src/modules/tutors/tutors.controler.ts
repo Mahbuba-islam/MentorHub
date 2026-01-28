@@ -43,6 +43,25 @@ const getTutorDetails = async(req:Request, res:Response, next:NextFunction)=> {
 }
 
 
+// find featured tutor controler
+
+ const getFeaturedTutors = async (req: Request, res: Response, next:NextFunction) => {
+  try {
+    const tutors = await tutorsService.findFeaturedTutors();
+    res.status(200).json({ success: true, data: tutors });
+  } catch (error) {
+    next(error)
+  }
+};
+
+
+
+
+
+
+
+
+
 
 //create tutors
 
@@ -70,5 +89,6 @@ const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
 export const tutorControler = {
     getTutors,
     getTutorDetails,
+    getFeaturedTutors,
     createTutors
 }

@@ -28,7 +28,7 @@ datasource db {
 model TutorProfile {
   id         String   @id @default(uuid())
   userId     String   @unique
-  // user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
   bio        String?
@@ -60,14 +60,17 @@ model Category {
 //booking model
 
 model Booking {
-  id        String        @id @default(uuid())
+  id        String @id @default(uuid())
   studentId String
-  student   User          @relation(fields: [studentId], references: [id])
-  tutorId   String
-  tutor     TutorProfile  @relation(fields: [tutorId], references: [id])
-  date      DateTime
-  time      String
-  status    BookingStatus @default(CONFIRMED)
+  student   User   @relation("StudentBookings", fields: [studentId], references: [id])
+
+  tutorId String
+  tutor   TutorProfile  @relation(fields: [tutorId], references: [id])
+  date    DateTime
+  time    String
+  status  BookingStatus @default(CONFIRMED)
+  user    User?         @relation(fields: [userId], references: [id])
+  userId  String?
 
   @@index([studentId])
   @@index([tutorId])
@@ -106,9 +109,11 @@ model User {
   bookings      Booking[]
   reviews       Review[]
 
-  role   String  @default("STUDENT")
-  phone  String?
-  status String? @default("ACTIVE")
+  role            String        @default("STUDENT")
+  phone           String?
+  status          String?       @default("ACTIVE")
+  tutorProfile    TutorProfile?
+  studentBookings Booking[]     @relation("StudentBookings")
 
   @@unique([email])
   @@map("user")

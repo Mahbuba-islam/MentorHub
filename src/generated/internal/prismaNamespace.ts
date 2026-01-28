@@ -1156,7 +1156,8 @@ export const BookingScalarFieldEnum = {
   tutorId: 'tutorId',
   date: 'date',
   time: 'time',
-  status: 'status'
+  status: 'status',
+  userId: 'userId'
 } as const
 
 export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
