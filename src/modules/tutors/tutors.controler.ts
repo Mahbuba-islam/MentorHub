@@ -3,10 +3,15 @@ import { tutorsService } from "./tutors.service"
 
 
 
-
+// get all tutors
 const getTutors = async(req:Request, res:Response, next:NextFunction)=>{
  try{
-  const results = await tutorsService.getTutors()
+  const {search} = req.query
+  const categoryName = req.query.category 
+  const searchString = typeof search === 'string' ? search  : undefined
+  const categoryString = typeof categoryName === 'string' ? categoryName : undefined
+  console.log('search', search);
+  const results = await tutorsService.getTutors({search:searchString, categoryName:categoryString})
    res.status(201).json(results)
  }
  catch (error) {
@@ -15,6 +20,31 @@ const getTutors = async(req:Request, res:Response, next:NextFunction)=>{
 
 }
 
+
+
+
+
+// get tutors details by id
+
+const getTutorDetails = async(req:Request, res:Response, next:NextFunction)=> {
+  try {
+      const { id } = req.params;
+
+      const tutor = await tutorsService.getTutorDetails(id as string);
+
+      res.status(200).json({
+        success: true,
+        data: tutor
+      });
+    } catch (error) {
+      next(error);
+    }
+
+}
+
+
+
+//create tutors
 
 const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
  try{
@@ -39,5 +69,6 @@ const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
 
 export const tutorControler = {
     getTutors,
+    getTutorDetails,
     createTutors
 }

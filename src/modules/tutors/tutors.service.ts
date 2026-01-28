@@ -5,15 +5,84 @@ import { prisma } from "../../lib/prisma";
 
 
 //get tutors
+const getTutors = async (payload: {
+  search?: string | undefined,
+  categoryName?: string | undefined
+}) => {
+  const { search, categoryName } = payload;
 
-const getTutors = async () => {
-  const results = await prisma.tutorProfile.findMany({
-    
-    
- })
- return results
-} 
+  const num = Number(search);
+  const isNumber = !isNaN(num);
 
+  return prisma.tutorProfile.findMany({
+    where: {
+      AND: [
+        // category filter (optional)
+        categoryName
+          ? {
+              category: {
+                name: {
+                  equals: categoryName,
+                  mode: "insensitive"
+                }
+              }
+            }
+          : {},
+
+        // search filter (optional)
+        search
+          ? {
+              OR: [
+                // subject search
+                {
+                  subject: {
+                    has: search
+                  }
+                },
+
+                // rating search
+                isNumber ? { rating: { equals: num } } : {},
+
+                // price search
+                isNumber ? { price: { equals: num } } : {}
+              ]
+            }
+          : {}
+      ]
+    },
+     include: {
+      category: true
+    }
+
+  });
+};
+
+
+//get tutor details
+const getTutorDetails = async(id:string) => {
+  const tutor = await prisma.tutorProfile.findUnique({
+      where: { id },
+      include: {
+        category: {
+          select: { name: true }
+        },
+        reviews: {
+          include: {
+            student: {
+              select: { name: true }
+            }
+          }
+        }
+      }
+    });
+
+    if (!tutor) {
+      throw new Error("Tutor not found");
+    }
+
+    return tutor;
+
+}
 
 
 //create tutors
@@ -34,6 +103,7 @@ const createTutors = async (data:TutorProfile, userId:string) => {
 
 export const tutorsService = {
     getTutors ,
+    getTutorDetails,
     createTutors
 
 }
