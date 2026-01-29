@@ -8,4 +8,4 @@ router.get("/", auth(userRole.USER), studentControler.getProfile)
 
 router.put("/", auth(userRole.USER), studentControler.updateProfile)
 
-export const studentRouter = router
+export const studentsRouter = router
