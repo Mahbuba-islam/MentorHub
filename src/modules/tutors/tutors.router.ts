@@ -12,5 +12,9 @@ router.get("/featured", tutorControler.getFeaturedTutors);
 router.get("/:id", tutorControler.getTutorDetails);
 
 router.post("/", auth(), tutorControler.createTutors)
+router.put("/availability", auth(), tutorControler.updateAvailability)
+
+
+router.put("/profile", auth(), tutorControler.updateProfile)
 
 export const tutorRouter = router

@@ -109,67 +109,53 @@ const getTutorDetails = async(id:string) => {
 
 //get tutor dashboard data
 
-const getTutorDashboardData = async (tutorId: string) => {
+  const getTutorDashboard = async (tutorId: string) => {
   const now = new Date();
 
-  // Upcoming sessions
-  const upcoming = await prisma.booking.findMany({
-    where: {
-      tutorId,
-      date: { gte: now },
-      status: "CONFIRMED"
-    },
+  // 1. Full tutor profile with all info
+  const profile = await prisma.tutorProfile.findUnique({
+    where: { userId: tutorId },
     include: {
-      student: { select: { name: true, image: true } }
-    },
-    orderBy: { date: "asc" }
-  });
-
-  // Past sessions
-  const past = await prisma.booking.findMany({
-    where: {
-      tutorId,
-      OR: [
-        { date: { lt: now } },
-        { status: "COMPLETED" }
-      ]
-    },
-    include: {
-      student: { select: { name: true, image: true } }
-    },
-    orderBy: { date: "desc" }
-  });
-
-  // Stats
-  const totalSessions = await prisma.booking.count({ where: { tutorId } });
-
-  const totalStudents = await prisma.booking.findMany({
-    where: { tutorId },
-    select: { studentId: true },
-    distinct: ["studentId"]
-  });
-
-  const tutorProfile = await prisma.tutorProfile.findUnique({
-    where: { id: tutorId },
-    select: {
-      rating: true,
-      totalReviews: true
+      user: true,        // name, email, image
+      category: true,    // category name
+      reviews: true,     // all reviews
+      bookings: {
+        include: {
+          student: true
+          
+        },
+        orderBy: { date: "asc" }
+      }
     }
+  });
+
+  if (!profile) throw new Error("Tutor profile not found");
+
+  // 2. Split bookings into upcoming + past
+  const upcomingSessions = profile.bookings.filter(
+    (b) => b.date >= now
+  );
+
+  const pastSessions = profile.bookings.filter(
+    (b) => b.date < now
+  );
+
+  // 3. Fetch all reviews separately (with student info)
+  const reviews = await prisma.review.findMany({
+    where: { tutorId },
+    include: {
+      student: true
+    },
+    orderBy: { createdAt: "desc" }
   });
 
   return {
-    sessions: {
-      upcoming,
-      past
-    },
-    stats: {
-      totalSessions,
-      totalStudents: totalStudents.length,
-      averageRating: tutorProfile?.rating || 0,
-      totalReviews: tutorProfile?.totalReviews || 0,
-      upcomingCount: upcoming.length,
-      pastCount: past.length
-    }
+    profile,             // full tutor profile
+    upcomingSessions,    // future classes
+    pastSessions,        // completed classes
+    reviews,             // all reviews
+    rating: profile.rating || 0,
+    totalReviews: profile.totalReviews || 0
   };
 };
 
@@ -190,11 +176,72 @@ const createTutors = async (data:TutorProfile, userId:string) => {
 } 
 
 
+
+
+// update tutors 
+
+const updateTutorProfile = async (
+  userId: string,
+  data: { bio?: string; price?: number; subject?: string[]; categoryId?: string }
+) => {
+  return prisma.tutorProfile.update({
+    where: { userId },
+    data: {
+      ...(data.bio !== undefined && { bio: data.bio }),
+      ...(data.price !== undefined && { price: data.price }),
+      ...(data.categoryId && { categoryId: data.categoryId }),
+      ...(data.subject && { subject: data.subject }), // string[]
+    },
+    include: {
+      user: true,
+      category: true,
+    },
+  });
+};
+
+
+
+// set availbility slots
+ const updateAvailability = async (
+  userId: string,
+  data: { date: string; timeSlots: string[] }
+) => {
+  const { date, timeSlots } = data;
+
+  // Check if availability exists for this date
+  const existing = await prisma.availability.findFirst({
+    where: {
+      tutorId: userId,
+      date: new Date(date),
+    },
+  });
+
+  if (existing) {
+    // Update existing availability
+    return prisma.availability.update({
+      where: { id: existing.id },
+      data: { timeSlots },
+    });
+  }
+
+  // Create new availability
+  return prisma.availability.create({
+    data: {
+      tutorId: userId,
+      date: new Date(date),
+      timeSlots,
+    },
+  });
+};
+
+
 export const tutorsService = {
     getTutors ,
     getTutorDetails,
     findFeaturedTutors ,
     createTutors,
-    getTutorDashboardData
+    getTutorDashboard,
+    updateTutorProfile,
+    updateAvailability
 
 }

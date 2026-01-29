@@ -67,7 +67,7 @@ const getTutorDashboard = async (req: Request, res: Response, next:NextFunction)
     }
     const tutorId = req.user.id;
  
-    const data = await tutorsService.getTutorDashboardData(tutorId);
+    const data = await tutorsService.getTutorDashboard(tutorId);
 
     return res.json({
       success: true,
@@ -79,6 +79,25 @@ const getTutorDashboard = async (req: Request, res: Response, next:NextFunction)
 };
 
 
+//updateAvailability
+
+const updateAvailability = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const { date, timeSlots } = req.body;
+
+    const result = await tutorsService.updateAvailability(req.user.id, {
+      date,
+      timeSlots,
+    });
+
+    res.json({
+      message: "Availability updated successfully",
+      availability: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 
 
@@ -108,10 +127,41 @@ const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
 
 }
 
+
+
+
+
+
+//update
+ const updateProfile = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const { bio, price, subject, categoryId } = req.body;
+
+    const updatedProfile = await tutorsService.updateTutorProfile(req.user.id, {
+      bio,
+      price,
+      subject,     // string[]
+      categoryId,  // single category
+    });
+
+    res.json({
+      message: "Tutor profile updated successfully",
+      profile: updatedProfile,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+
 export const tutorControler = {
     getTutors,
     getTutorDetails,
     getTutorDashboard,
     getFeaturedTutors,
-    createTutors
+    createTutors,
+    updateProfile,
+    updateAvailability
 }

@@ -2,19 +2,23 @@ import express from "express"
 import { toNodeHandler } from "better-auth/node"
 import { auth } from "./lib/auth"
 import { tutorRouter } from "./modules/tutors/tutors.router"
-import { categoryRouter } from "./modules/category/router.category"
 import { errorHandler } from "./middlewares/errorHandler"
 import { notFound } from "./middlewares/notFound"
 import cors from 'cors'
 import { reviewRouter } from "./modules/review/router.review"
 import { bookingRouter } from "./modules/booking/router.booking"
+import { studentRouter } from "./modules/student/student.router"
+import { adminRouter } from "./modules/admin/admin.router"
+import { categoryRouter } from "./modules/category/category.router"
 
 const app = express()
 
 app.use(cors({
- origin:process.env.APP_URL,
- credentials:true
+    origin:process.env.APP_URL || "http://localhost:3000",
+    credentials:true
+
 }))
+
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
@@ -29,11 +33,11 @@ app.get("/", (req, res)=> {
 })
 
 app.use("/tutors", tutorRouter)
-app.use("/category", categoryRouter)
 app.use("/review", reviewRouter)
-
+app.use('/category', categoryRouter)
 app.use("/bookings", bookingRouter)
-
+app.use("/student/profile", studentRouter)
+app.use("/admin", adminRouter)
 app.use(notFound)
 app.use(errorHandler)
 
