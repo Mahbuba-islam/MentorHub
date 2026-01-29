@@ -59,31 +59,36 @@ const getTutors = async (payload: {
 
 
 //get tutor details
-const getTutorDetails = async(id:string) => {
+const getTutorDetails = async (id: string) => {
   const tutor = await prisma.tutorProfile.findUnique({
-      where: { id },
-      include: {
-        category: {
-          select: { name: true }
-        },
-        reviews: {
-          include: {
-            student: {
-              select: { name: true }
-            }
+    where: { id },
+    include: {
+      user: {
+        select: {
+          name: true,
+          image: true,
+          email: true
+        }
+      },
+      category: {
+        select: { name: true }
+      },
+      reviews: {
+        include: {
+          student: {
+            select: { name: true }
           }
         }
       }
-    });
-
-    if (!tutor) {
-      throw new Error("Tutor not found");
     }
+  });
 
-    return tutor;
+  if (!tutor) {
+    throw new Error("Tutor not found");
+  }
 
-}
-
+  return tutor;
+};
 
 
 
