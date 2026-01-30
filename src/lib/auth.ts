@@ -22,27 +22,28 @@ export const auth = betterAuth({
         
     } ),
     trustedOrigins:[process.env.APP_URL!],
-
-    user:{
-     additionalFields:{
-        role:{
-            type:"string",
-            defaultValue:"STUDENT",
-            required:true
-        },
-        phone:{
-            type:"string",
-            required:false
-        },
-        status:{
-            type:"string",
-            defaultValue:"ACTIVE",
-            required:false
-        }
-     }
+user: {
+  additionalFields: {
+    role: {
+      type: "string",
+      defaultValue: "STUDENT",
+      required: true
     },
+    phone: {
+      type: "string",
+      required: false
+    },
+    status: {
+      type: "string",
+      defaultValue: "ACTIVE",
+      required: false
+    }
+  }
+},
 
-    emailAndPassword:{
+
+
+emailAndPassword:{
         enabled:true,
         requireEmailVerification:true
     },

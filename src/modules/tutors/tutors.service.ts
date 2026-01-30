@@ -181,6 +181,32 @@ const createTutors = async (data:TutorProfile, userId:string) => {
 } 
 
 
+//tutor sessions
+
+ 
+  const getTutorSessions = async(tutorId: string)=>  {
+    const results = await prisma.booking.findMany({
+      where: { tutorId },
+      include: {
+        student: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true
+          }
+        }
+      },
+      orderBy: { date: "asc" }
+    })
+    return results
+  }
+
+
+
+
+
+
 
 
 // update tutors 
@@ -247,6 +273,7 @@ export const tutorsService = {
     createTutors,
     getTutorDashboard,
     updateTutorProfile,
-    updateAvailability
+    updateAvailability,
+    getTutorSessions
 
 }

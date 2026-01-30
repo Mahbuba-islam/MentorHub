@@ -170,6 +170,7 @@ export type AvailabilityWhereInput = {
   tutorId?: Prisma.StringFilter<"Availability"> | string
   date?: Prisma.DateTimeFilter<"Availability"> | Date | string
   timeSlots?: Prisma.StringNullableListFilter<"Availability">
+  tutor?: Prisma.XOR<Prisma.TutorProfileScalarRelationFilter, Prisma.TutorProfileWhereInput>
 }
 
 export type AvailabilityOrderByWithRelationInput = {
@@ -177,6 +178,7 @@ export type AvailabilityOrderByWithRelationInput = {
   tutorId?: Prisma.SortOrder
   date?: Prisma.SortOrder
   timeSlots?: Prisma.SortOrder
+  tutor?: Prisma.TutorProfileOrderByWithRelationInput
 }
 
 export type AvailabilityWhereUniqueInput = Prisma.AtLeast<{
@@ -187,6 +189,7 @@ export type AvailabilityWhereUniqueInput = Prisma.AtLeast<{
   tutorId?: Prisma.StringFilter<"Availability"> | string
   date?: Prisma.DateTimeFilter<"Availability"> | Date | string
   timeSlots?: Prisma.StringNullableListFilter<"Availability">
+  tutor?: Prisma.XOR<Prisma.TutorProfileScalarRelationFilter, Prisma.TutorProfileWhereInput>
 }, "id">
 
 export type AvailabilityOrderByWithAggregationInput = {
@@ -211,9 +214,9 @@ export type AvailabilityScalarWhereWithAggregatesInput = {
 
 export type AvailabilityCreateInput = {
   id?: string
-  tutorId: string
   date: Date | string
   timeSlots?: Prisma.AvailabilityCreatetimeSlotsInput | string[]
+  tutor: Prisma.TutorProfileCreateNestedOneWithoutAvailabilitiesInput
 }
 
 export type AvailabilityUncheckedCreateInput = {
@@ -225,9 +228,9 @@ export type AvailabilityUncheckedCreateInput = {
 
 export type AvailabilityUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tutorId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSlots?: Prisma.AvailabilityUpdatetimeSlotsInput | string[]
+  tutor?: Prisma.TutorProfileUpdateOneRequiredWithoutAvailabilitiesNestedInput
 }
 
 export type AvailabilityUncheckedUpdateInput = {
@@ -246,7 +249,6 @@ export type AvailabilityCreateManyInput = {
 
 export type AvailabilityUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  tutorId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSlots?: Prisma.AvailabilityUpdatetimeSlotsInput | string[]
 }
@@ -256,6 +258,16 @@ export type AvailabilityUncheckedUpdateManyInput = {
   tutorId?: Prisma.StringFieldUpdateOperationsInput | string
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   timeSlots?: Prisma.AvailabilityUpdatetimeSlotsInput | string[]
+}
+
+export type AvailabilityListRelationFilter = {
+  every?: Prisma.AvailabilityWhereInput
+  some?: Prisma.AvailabilityWhereInput
+  none?: Prisma.AvailabilityWhereInput
+}
+
+export type AvailabilityOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type AvailabilityCountOrderByAggregateInput = {
@@ -277,6 +289,48 @@ export type AvailabilityMinOrderByAggregateInput = {
   date?: Prisma.SortOrder
 }
 
+export type AvailabilityCreateNestedManyWithoutTutorInput = {
+  create?: Prisma.XOR<Prisma.AvailabilityCreateWithoutTutorInput, Prisma.AvailabilityUncheckedCreateWithoutTutorInput> | Prisma.AvailabilityCreateWithoutTutorInput[] | Prisma.AvailabilityUncheckedCreateWithoutTutorInput[]
+  connectOrCreate?: Prisma.AvailabilityCreateOrConnectWithoutTutorInput | Prisma.AvailabilityCreateOrConnectWithoutTutorInput[]
+  createMany?: Prisma.AvailabilityCreateManyTutorInputEnvelope
+  connect?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+}
+
+export type AvailabilityUncheckedCreateNestedManyWithoutTutorInput = {
+  create?: Prisma.XOR<Prisma.AvailabilityCreateWithoutTutorInput, Prisma.AvailabilityUncheckedCreateWithoutTutorInput> | Prisma.AvailabilityCreateWithoutTutorInput[] | Prisma.AvailabilityUncheckedCreateWithoutTutorInput[]
+  connectOrCreate?: Prisma.AvailabilityCreateOrConnectWithoutTutorInput | Prisma.AvailabilityCreateOrConnectWithoutTutorInput[]
+  createMany?: Prisma.AvailabilityCreateManyTutorInputEnvelope
+  connect?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+}
+
+export type AvailabilityUpdateManyWithoutTutorNestedInput = {
+  create?: Prisma.XOR<Prisma.AvailabilityCreateWithoutTutorInput, Prisma.AvailabilityUncheckedCreateWithoutTutorInput> | Prisma.AvailabilityCreateWithoutTutorInput[] | Prisma.AvailabilityUncheckedCreateWithoutTutorInput[]
+  connectOrCreate?: Prisma.AvailabilityCreateOrConnectWithoutTutorInput | Prisma.AvailabilityCreateOrConnectWithoutTutorInput[]
+  upsert?: Prisma.AvailabilityUpsertWithWhereUniqueWithoutTutorInput | Prisma.AvailabilityUpsertWithWhereUniqueWithoutTutorInput[]
+  createMany?: Prisma.AvailabilityCreateManyTutorInputEnvelope
+  set?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  disconnect?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  delete?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  connect?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  update?: Prisma.AvailabilityUpdateWithWhereUniqueWithoutTutorInput | Prisma.AvailabilityUpdateWithWhereUniqueWithoutTutorInput[]
+  updateMany?: Prisma.AvailabilityUpdateManyWithWhereWithoutTutorInput | Prisma.AvailabilityUpdateManyWithWhereWithoutTutorInput[]
+  deleteMany?: Prisma.AvailabilityScalarWhereInput | Prisma.AvailabilityScalarWhereInput[]
+}
+
+export type AvailabilityUncheckedUpdateManyWithoutTutorNestedInput = {
+  create?: Prisma.XOR<Prisma.AvailabilityCreateWithoutTutorInput, Prisma.AvailabilityUncheckedCreateWithoutTutorInput> | Prisma.AvailabilityCreateWithoutTutorInput[] | Prisma.AvailabilityUncheckedCreateWithoutTutorInput[]
+  connectOrCreate?: Prisma.AvailabilityCreateOrConnectWithoutTutorInput | Prisma.AvailabilityCreateOrConnectWithoutTutorInput[]
+  upsert?: Prisma.AvailabilityUpsertWithWhereUniqueWithoutTutorInput | Prisma.AvailabilityUpsertWithWhereUniqueWithoutTutorInput[]
+  createMany?: Prisma.AvailabilityCreateManyTutorInputEnvelope
+  set?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  disconnect?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  delete?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  connect?: Prisma.AvailabilityWhereUniqueInput | Prisma.AvailabilityWhereUniqueInput[]
+  update?: Prisma.AvailabilityUpdateWithWhereUniqueWithoutTutorInput | Prisma.AvailabilityUpdateWithWhereUniqueWithoutTutorInput[]
+  updateMany?: Prisma.AvailabilityUpdateManyWithWhereWithoutTutorInput | Prisma.AvailabilityUpdateManyWithWhereWithoutTutorInput[]
+  deleteMany?: Prisma.AvailabilityScalarWhereInput | Prisma.AvailabilityScalarWhereInput[]
+}
+
 export type AvailabilityCreatetimeSlotsInput = {
   set: string[]
 }
@@ -290,6 +344,78 @@ export type AvailabilityUpdatetimeSlotsInput = {
   push?: string | string[]
 }
 
+export type AvailabilityCreateWithoutTutorInput = {
+  id?: string
+  date: Date | string
+  timeSlots?: Prisma.AvailabilityCreatetimeSlotsInput | string[]
+}
+
+export type AvailabilityUncheckedCreateWithoutTutorInput = {
+  id?: string
+  date: Date | string
+  timeSlots?: Prisma.AvailabilityCreatetimeSlotsInput | string[]
+}
+
+export type AvailabilityCreateOrConnectWithoutTutorInput = {
+  where: Prisma.AvailabilityWhereUniqueInput
+  create: Prisma.XOR<Prisma.AvailabilityCreateWithoutTutorInput, Prisma.AvailabilityUncheckedCreateWithoutTutorInput>
+}
+
+export type AvailabilityCreateManyTutorInputEnvelope = {
+  data: Prisma.AvailabilityCreateManyTutorInput | Prisma.AvailabilityCreateManyTutorInput[]
+  skipDuplicates?: boolean
+}
+
+export type AvailabilityUpsertWithWhereUniqueWithoutTutorInput = {
+  where: Prisma.AvailabilityWhereUniqueInput
+  update: Prisma.XOR<Prisma.AvailabilityUpdateWithoutTutorInput, Prisma.AvailabilityUncheckedUpdateWithoutTutorInput>
+  create: Prisma.XOR<Prisma.AvailabilityCreateWithoutTutorInput, Prisma.AvailabilityUncheckedCreateWithoutTutorInput>
+}
+
+export type AvailabilityUpdateWithWhereUniqueWithoutTutorInput = {
+  where: Prisma.AvailabilityWhereUniqueInput
+  data: Prisma.XOR<Prisma.AvailabilityUpdateWithoutTutorInput, Prisma.AvailabilityUncheckedUpdateWithoutTutorInput>
+}
+
+export type AvailabilityUpdateManyWithWhereWithoutTutorInput = {
+  where: Prisma.AvailabilityScalarWhereInput
+  data: Prisma.XOR<Prisma.AvailabilityUpdateManyMutationInput, Prisma.AvailabilityUncheckedUpdateManyWithoutTutorInput>
+}
+
+export type AvailabilityScalarWhereInput = {
+  AND?: Prisma.AvailabilityScalarWhereInput | Prisma.AvailabilityScalarWhereInput[]
+  OR?: Prisma.AvailabilityScalarWhereInput[]
+  NOT?: Prisma.AvailabilityScalarWhereInput | Prisma.AvailabilityScalarWhereInput[]
+  id?: Prisma.StringFilter<"Availability"> | string
+  tutorId?: Prisma.StringFilter<"Availability"> | string
+  date?: Prisma.DateTimeFilter<"Availability"> | Date | string
+  timeSlots?: Prisma.StringNullableListFilter<"Availability">
+}
+
+export type AvailabilityCreateManyTutorInput = {
+  id?: string
+  date: Date | string
+  timeSlots?: Prisma.AvailabilityCreatetimeSlotsInput | string[]
+}
+
+export type AvailabilityUpdateWithoutTutorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timeSlots?: Prisma.AvailabilityUpdatetimeSlotsInput | string[]
+}
+
+export type AvailabilityUncheckedUpdateWithoutTutorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timeSlots?: Prisma.AvailabilityUpdatetimeSlotsInput | string[]
+}
+
+export type AvailabilityUncheckedUpdateManyWithoutTutorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  timeSlots?: Prisma.AvailabilityUpdatetimeSlotsInput | string[]
+}
+
 
 
 export type AvailabilitySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -297,6 +423,7 @@ export type AvailabilitySelect<ExtArgs extends runtime.Types.Extensions.Internal
   tutorId?: boolean
   date?: boolean
   timeSlots?: boolean
+  tutor?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["availability"]>
 
 export type AvailabilitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -304,6 +431,7 @@ export type AvailabilitySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   tutorId?: boolean
   date?: boolean
   timeSlots?: boolean
+  tutor?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["availability"]>
 
 export type AvailabilitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -311,6 +439,7 @@ export type AvailabilitySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   tutorId?: boolean
   date?: boolean
   timeSlots?: boolean
+  tutor?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["availability"]>
 
 export type AvailabilitySelectScalar = {
@@ -321,10 +450,21 @@ export type AvailabilitySelectScalar = {
 }
 
 export type AvailabilityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "tutorId" | "date" | "timeSlots", ExtArgs["result"]["availability"]>
+export type AvailabilityInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  tutor?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
+}
+export type AvailabilityIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  tutor?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
+}
+export type AvailabilityIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  tutor?: boolean | Prisma.TutorProfileDefaultArgs<ExtArgs>
+}
 
 export type $AvailabilityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Availability"
-  objects: {}
+  objects: {
+    tutor: Prisma.$TutorProfilePayload<ExtArgs>
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     tutorId: string
@@ -724,6 +864,7 @@ readonly fields: AvailabilityFieldRefs;
  */
 export interface Prisma__AvailabilityClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  tutor<T extends Prisma.TutorProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TutorProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__TutorProfileClient<runtime.Types.Result.GetResult<Prisma.$TutorProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -774,6 +915,10 @@ export type AvailabilityFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
+  /**
    * Filter, which Availability to fetch.
    */
   where: Prisma.AvailabilityWhereUniqueInput
@@ -792,6 +937,10 @@ export type AvailabilityFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
+  /**
    * Filter, which Availability to fetch.
    */
   where: Prisma.AvailabilityWhereUniqueInput
@@ -809,6 +958,10 @@ export type AvailabilityFindFirstArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the Availability
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
   /**
    * Filter, which Availability to fetch.
    */
@@ -858,6 +1011,10 @@ export type AvailabilityFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
+  /**
    * Filter, which Availability to fetch.
    */
   where?: Prisma.AvailabilityWhereInput
@@ -906,6 +1063,10 @@ export type AvailabilityFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
+  /**
    * Filter, which Availabilities to fetch.
    */
   where?: Prisma.AvailabilityWhereInput
@@ -949,6 +1110,10 @@ export type AvailabilityCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
+  /**
    * The data needed to create a Availability.
    */
   data: Prisma.XOR<Prisma.AvailabilityCreateInput, Prisma.AvailabilityUncheckedCreateInput>
@@ -982,6 +1147,10 @@ export type AvailabilityCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    */
   data: Prisma.AvailabilityCreateManyInput | Prisma.AvailabilityCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -996,6 +1165,10 @@ export type AvailabilityUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Availability
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
   /**
    * The data needed to update a Availability.
    */
@@ -1048,6 +1221,10 @@ export type AvailabilityUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Ex
    * Limit how many Availabilities to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1062,6 +1239,10 @@ export type AvailabilityUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Availability
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
   /**
    * The filter to search for the Availability to update in case it exists.
    */
@@ -1088,6 +1269,10 @@ export type AvailabilityDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Availability
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
   /**
    * Filter which Availability to delete.
    */
@@ -1120,4 +1305,8 @@ export type AvailabilityDefaultArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the Availability
    */
   omit?: Prisma.AvailabilityOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AvailabilityInclude<ExtArgs> | null
 }

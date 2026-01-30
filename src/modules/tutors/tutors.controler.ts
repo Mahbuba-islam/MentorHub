@@ -128,6 +128,23 @@ const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
 }
 
 
+//tutor session controler
+ 
+  const getTutorSessions = async(req: any, res: Response, next: NextFunction) => {
+    try {
+      const tutorId = req.user.id  // auth middleware থেকে আসবে
+
+      const bookings = await tutorsService.getTutorSessions(tutorId)
+
+      return res.json({
+        success: true,
+        bookings
+      })
+    } catch (err) {
+      next(err)
+    }
+  }
+
 
 
 
@@ -163,5 +180,6 @@ export const tutorControler = {
     getFeaturedTutors,
     createTutors,
     updateProfile,
-    updateAvailability
+    updateAvailability,
+    getTutorSessions
 }
