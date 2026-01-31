@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { bookingService } from "./service.booking";
+import { bookingService } from "./booking.service";
 import { userRole } from "../../middlewares/auth";
 
 
@@ -32,36 +32,33 @@ const getAllBookings = async (req:Request, res:Response, next:NextFunction) => {
 
 
 
-const createBooking = async (req:Request, res:Response, next:NextFunction) => {
+const createBooking = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = req.user
-    console.log(user);
-     // user chack
-     if(!req.user){
-     return res.status(400).json({
-        error:"Unothorized",
-      })
+    if (!req.user) {
+      return res.status(400).json({ error: "Unauthorized" });
     }
-    // 1) Role check
+
     if (req.user.role !== userRole.USER) {
-      return res.status(403).json({
+      return res.status(400).json({
         success: false,
-        message: "Only students can book tutoring sessions"
+        message: "Only students can book tutoring sessions",
       });
     }
 
-    // 2) Booking create
     const booking = await bookingService.createBooking({
-      ...req.body,
-      studentId: req.user.id, // override for security
+      tutorId: req.body.tutorId,
+      date: req.body.date,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      studentId: req.user.id, // session থেকে
     });
 
     res.status(201).json({ success: true, data: booking });
-
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
+
 
 export const bookingControler = {
   getAllBookings,

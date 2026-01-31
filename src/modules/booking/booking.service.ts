@@ -1,6 +1,7 @@
 
 import { Booking } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
+import { BookingCreateInput } from "../../utils/bookingType";
 
 
 // get booking with upcoming and past
@@ -81,24 +82,17 @@ const getAllBookingsForStudent = async () => {
 
 
 
- const createBooking = async (data:Booking) => {
-  const results =  prisma.booking.create({
+ const createBooking = async (data: BookingCreateInput) => {
+  return prisma.booking.create({
     data: {
       date: new Date(data.date),
-      time: data.time,
+      startTime: data.startTime,
+      endTime: data.endTime,
       tutorId: data.tutorId,
       studentId: data.studentId,
+      status: data.status ?? "CONFIRMED",
     },
-    // include: {
-    //   tutor: {
-    //     select: { id: true, rating: true }
-    //   },
-    //   student: {
-    //     select: { name: true, email: true }
-    //   }
-    // }
   });
-  return results
 };
 
 

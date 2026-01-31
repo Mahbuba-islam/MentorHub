@@ -6,6 +6,6 @@ import { categoryControler } from "./category.controler";
 
 const router = Router()
 
-router.get("/categories",  categoryControler.getAllCategories);
+router.get("/",  categoryControler.getAllCategories);
 
 export const categoryRouter = router

@@ -8,13 +8,13 @@ const router = Router()
 
 
 
-router.get("/getAllUsers", auth(userRole.ADMIN), adminControler.getAllUsers)
-router.patch("/users/:id/status", auth(userRole.ADMIN), adminControler.manageUsers);
-router.get("/bookings", auth(userRole.ADMIN) , adminControler.getAllBookings);
+router.get("/getAllUsers", auth(userRole.ADMIN), adminControler.getAllUsersController)
+router.patch("/users/:id/status", adminControler.manageUsers);
+router.get("/bookings", auth(userRole.ADMIN), adminControler.getAllBookings);
 
 router.post("/categories", auth(userRole.ADMIN), adminControler.createCategory);
-router.put("/categories/:id", auth(userRole.ADMIN), adminControler.updateCategory);
-router.delete("/categories/:id", auth(userRole.ADMIN), adminControler.deleteCategory);
+router.put("/categories/:id",  adminControler.updateCategory);
+router.delete("/categories/:id",  adminControler.deleteCategory);
 
 
 

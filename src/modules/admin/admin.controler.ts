@@ -3,14 +3,15 @@
 import { adminService } from "./admin.service";
 
  
-  const getAllUsers = async(req: Request, res: Response) => {
-    try {
-      const users = await adminService.getAllUsers();
-      return res.json(users);
-    } catch (err) {
-      return res.status(500).json({ message: "Failed to fetch users" });
-    }
+   const getAllUsersController = async (req: Request, res: Response) => {
+  try {
+    const users = await adminService.getAllUsersService()
+    return res.json({ users })
+  } catch (err) {
+    console.error("Get All Users Error:", err)
+    return res.status(500).json({ error: "Something went wrong" })
   }
+}
 
 
 
@@ -121,11 +122,15 @@ import { adminService } from "./admin.service";
  
  
  export const adminControler = {
-   getAllUsers,
+   getAllUsersController,
    manageUsers,
    getAllBookings,
    createCategory,
    updateCategory,
    deleteCategory,
    
+}
+
+function getAllUsersService() {
+  throw new Error("Function not implemented.");
 }

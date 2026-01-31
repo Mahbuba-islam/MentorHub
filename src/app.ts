@@ -6,10 +6,10 @@ import { errorHandler } from "./middlewares/errorHandler"
 import { notFound } from "./middlewares/notFound"
 import cors from 'cors'
 import { reviewRouter } from "./modules/review/router.review"
-import { bookingRouter } from "./modules/booking/router.booking"
 import { studentsRouter } from "./modules/student/student.router"
 import { adminRouter } from "./modules/admin/admin.router"
 import { categoryRouter } from "./modules/category/category.router"
+import { bookingRouter } from "./modules/booking/booking.router"
 
 const app = express()
 
@@ -34,7 +34,7 @@ app.get("/", (req, res)=> {
 
 app.use("/tutors", tutorRouter)
 app.use("/review", reviewRouter)
-app.use('/category', categoryRouter)
+app.use('/categories', categoryRouter)
 app.use("/bookings", bookingRouter)
 app.use("/student/profile", studentsRouter)
 app.use("/admin", adminRouter)

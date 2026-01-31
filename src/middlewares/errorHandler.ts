@@ -55,7 +55,7 @@ export const errorHandler = (
 
    else if(err instanceof PrismaClientInitializationError){
     if(err.errorCode === "P1000"){
-     statusCode = 401
+     statusCode = 400
     errorMessage = "Authentication failed"
     }
 
