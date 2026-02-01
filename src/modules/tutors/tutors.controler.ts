@@ -176,11 +176,18 @@ const createTutors = async (req: Request, res: Response, next: NextFunction) => 
 
 const getTutorReviews = async (req: any, res: Response, next: NextFunction) => {
   try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     const userId = req.user.id;
 
     const reviews = await tutorsService.getTutorReviews(userId);
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       data: reviews,
     });
