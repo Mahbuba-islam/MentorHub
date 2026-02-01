@@ -1,54 +1,10 @@
 
-import { Booking } from "@prisma/client";
+
 import { prisma } from "../../lib/prisma";
 import { BookingCreateInput } from "../../utils/bookingType";
 
 
-// get booking with upcoming and past
 
-
-
-// const getAllBookingsForStudent = async (studentId: string) => {
-//   const now = new Date();
-
-//   // Upcoming bookings
-//   const upcoming = await prisma.booking.findMany({
-//     where: {
-//       studentId,
-//       date: { gte: now },
-//       status: "CONFIRMED"
-//     },
-//     // include: {
-//     //   tutor: {
-//     //     include: {
-//     //       user: { select: { name: true, image: true } }
-//     //     }
-//     //   }
-//     // },
-//     orderBy: { date: "asc" }
-//   });
-
-//   // Past bookings
-//   const past = await prisma.booking.findMany({
-//     where: {
-//       studentId,
-//       OR: [
-//         { date: { lt: now } },
-//         { status: "COMPLETED" }
-//       ]
-//     },
-//     // include: {
-//     //   tutor: {
-//     //     include: {
-//     //       user: { select: { name: true, image: true } }
-//     //     }
-//     //   }
-//     // },
-//     orderBy: { date: "desc" }
-//   });
-
-//   return { upcoming, past };
-// };
 
 const getAllBookingsForStudent = async () => {
   
@@ -83,14 +39,24 @@ const getAllBookingsForStudent = async () => {
 
 
  const createBooking = async (data: BookingCreateInput) => {
+  // Step 1: find tutor profile by userId
+  const profile = await prisma.tutorProfile.findUnique({
+    where: { userId: data.tutorId },
+  });
+
+  if (!profile) {
+    throw new Error("Tutor profile not found");
+  }
+
+  // Step 2: create booking with TutorProfile.id
   return prisma.booking.create({
     data: {
       date: new Date(data.date),
       startTime: data.startTime,
       endTime: data.endTime,
-      tutorId: data.tutorId,
+      tutorId: profile.id,       // ✔ এখন সঠিক TutorProfile.id যাচ্ছে
       studentId: data.studentId,
-      status: data.status ?? "CONFIRMED",
+      status: "CONFIRMED",
     },
   });
 };

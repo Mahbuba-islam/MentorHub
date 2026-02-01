@@ -5,11 +5,12 @@ import { tutorRouter } from "./modules/tutors/tutors.router"
 import { errorHandler } from "./middlewares/errorHandler"
 import { notFound } from "./middlewares/notFound"
 import cors from 'cors'
-import { reviewRouter } from "./modules/review/router.review"
+
 import { studentsRouter } from "./modules/student/student.router"
 import { adminRouter } from "./modules/admin/admin.router"
 import { categoryRouter } from "./modules/category/category.router"
 import { bookingRouter } from "./modules/booking/booking.router"
+import { reviewRouter } from "./modules/review/review.router"
 
 const app = express()
 

@@ -45,7 +45,7 @@ user: {
 
 emailAndPassword:{
         enabled:true,
-        requireEmailVerification:true
+         requireEmailVerification:false
     },
 
     emailVerification: {

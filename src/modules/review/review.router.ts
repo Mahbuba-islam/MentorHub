@@ -1,10 +1,11 @@
 import { Router } from "express";
 
-import { reviewControler } from "./controler.review";
+;
 import auth, { userRole } from "../../middlewares/auth";
+import { reviewController } from "./review.controler";
 
 const router = Router()
 
-router.post("/", auth(userRole.USER), reviewControler.createReview);
+router.post("/", auth(userRole.USER), reviewController.createReview);
 
 export const reviewRouter = router

@@ -121,9 +121,9 @@ const getTutorDetails = async (id: string) => {
   const profile = await prisma.tutorProfile.findUnique({
     where: { userId: tutorId },
     include: {
-      user: true,        // name, email, image
-      category: true,    // category name
-      reviews: true,     // all reviews
+      user: true,        
+      category: true,    
+      reviews: true,     
       bookings: {
         include: {
           student: true
@@ -155,10 +155,10 @@ const getTutorDetails = async (id: string) => {
   });
 
   return {
-    profile,             // full tutor profile
-    upcomingSessions,    // future classes
-    pastSessions,        // completed classes
-    reviews,             // all reviews
+    profile,             
+    upcomingSessions,    
+    pastSessions,        
+    reviews,            
     rating: profile.rating || 0,
     totalReviews: profile.totalReviews || 0
   };
@@ -167,41 +167,27 @@ const getTutorDetails = async (id: string) => {
 
 //create tutors
 
-const createTutors = async (data:TutorProfile, userId:string) => {
-    console.log(data);
- const results = await prisma.tutorProfile.create({
-    data:{
-        ...data,
-        userId:userId
-
+const createTutors = async (data: TutorProfile, userId: string) => {
+  const results = await prisma.tutorProfile.create({
+    data: {
+      ...data,
+      userId: userId
+    },
+    include: {
+      user: true,        
+      category: true     
     }
-    
- })
- return results
-} 
+  });
+
+  return results;
+};
+
 
 
 //tutor sessions
 
  
-  const getTutorSessions = async(tutorId: string)=>  {
-    const results = await prisma.booking.findMany({
-      where: { tutorId },
-      include: {
-        student: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            image: true
-          }
-        }
-      },
-      orderBy: { date: "asc" }
-    })
-    return results
-  }
-
+  
 
 
 
@@ -230,6 +216,88 @@ const updateTutorProfile = async (
 
 
 
+const getTutorReviews = async (userId: string) => {
+  const profile = await prisma.tutorProfile.findUnique({
+    where: { userId },
+  });
+
+  if (!profile) throw new Error("Tutor profile not found");
+
+  return prisma.review.findMany({
+    where: { tutorId: profile.id },
+    orderBy: { createdAt: "desc" },
+    include: {
+      student: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+};
+
+
+
+
+  // -----------------------------
+  // GET ALL AVAILABILITY
+  // -----------------------------
+  const getAvailability = async (userId: string) => {
+    // find tutor profile
+    const profile = await prisma.tutorProfile.findUnique({
+      where: { userId },
+    });
+   
+    if (!profile) {
+      throw new Error("Tutor profile not found");
+    }
+
+    // fetch all availability for this tutor
+    return prisma.availability.findMany({
+      where: { tutorId: profile.id },
+      orderBy: { date: "asc" },
+    });
+  }
+
+
+
+
+
+  const getTutorSessions = async (userId: string) => {
+    // find tutor profile
+    const profile = await prisma.tutorProfile.findUnique({
+      where: { userId },
+    });
+
+    if (!profile) {
+      throw new Error("Tutor profile not found");
+    }
+
+    // fetch all bookings (sessions)
+    return prisma.booking.findMany({
+      where: { tutorId: profile.id },
+      orderBy: { date: "asc" },
+      include: {
+        student: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+
+
+
+
+
+
+
 // set availbility slots
  const updateAvailability = async (
   userId: string,
@@ -237,32 +305,39 @@ const updateTutorProfile = async (
 ) => {
   const { date, timeSlots } = data;
 
-  // Check if availability exists for this date
+  // 1. Get tutor profile by userId
+  const profile = await prisma.tutorProfile.findUnique({
+    where: { userId },
+  });
+
+  if (!profile) {
+    throw new Error("Tutor profile not found");
+  }
+
+  // 2. Check if availability exists for this date
   const existing = await prisma.availability.findFirst({
     where: {
-      tutorId: userId,
+      tutorId: profile.id, // FIXED
       date: new Date(date),
     },
   });
 
   if (existing) {
-    // Update existing availability
     return prisma.availability.update({
       where: { id: existing.id },
       data: { timeSlots },
     });
   }
 
-  // Create new availability
+  // 3. Create new availability
   return prisma.availability.create({
     data: {
-      tutorId: userId,
+      tutorId: profile.id, // FIXED
       date: new Date(date),
       timeSlots,
     },
   });
 };
-
 
 export const tutorsService = {
     getTutors ,
@@ -272,6 +347,9 @@ export const tutorsService = {
     getTutorDashboard,
     updateTutorProfile,
     updateAvailability,
-    getTutorSessions
+    getTutorSessions,
+    getAvailability,
+    getTutorReviews
+    
 
 }

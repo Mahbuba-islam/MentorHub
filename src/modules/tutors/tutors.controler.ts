@@ -79,20 +79,60 @@ const getTutorDashboard = async (req: Request, res: Response, next:NextFunction)
 };
 
 
+ // -----------------------------
+  // GET AVAILABILITY
+  // -----------------------------
+  const getAvailability = async (req: Request, res: Response, next:NextFunction) => {
+   
+
+    try {
+       console.log("GET availability → userId:", req.user);
+
+        if(!req.user){
+     return res.status(400).json({
+        error:"Unothorized",
+      })
+    }
+      const userId = req.user.id;
+
+      const result = await tutorsService.getAvailability(userId);
+console.log("GET availability → result:", result);
+
+      res.json({
+        success: true,
+        message: "Availability fetched successfully",
+        data: result,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+
+
+
+
+
 //updateAvailability
 
-const updateAvailability = async (req: any, res: Response, next: NextFunction) => {
+const updateAvailability = async (req: Request, res: Response, next:NextFunction) => {
   try {
+    
     const { date, timeSlots } = req.body;
-
+ if(!req.user){
+     return res.status(400).json({
+        error:"Unothorized",
+      })
+    }
     const result = await tutorsService.updateAvailability(req.user.id, {
       date,
       timeSlots,
     });
 
     res.json({
-      message: "Availability updated successfully",
-      availability: result,
+      success: true,
+      message: "Availability set successfully",
+      data: result,
     });
   } catch (err) {
     next(err);
@@ -104,35 +144,59 @@ const updateAvailability = async (req: any, res: Response, next: NextFunction) =
 
 
 
+
 //create tutors
 
-const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
- try{
-  console.log(req.user);
-    console.log(req.body);
-    const user = req.user
+// create tutors
+const createTutors = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.user;
 
-    if(!user){
-     return res.status(400).json({
-        error:"Unothorized",
-      })
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Unauthorized",
+      });
     }
 
-   const results = await tutorsService.createTutors(req.body, user.id )
-   res.status(201).json(results)
- }
- catch (error) {
-    next(error)
-  }
+    const results = await tutorsService.createTutors(req.body, user.id);
 
-}
+    return res.status(201).json({
+      success: true,
+      message: "Tutor profile created successfully",
+      data: results, 
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+
+const getTutorReviews = async (req: any, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user.id;
+
+    const reviews = await tutorsService.getTutorReviews(userId);
+
+    return res.json({
+      success: true,
+      data: reviews,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 
 //tutor session controler
- 
-  const getTutorSessions = async(req: any, res: Response, next: NextFunction) => {
+ const getTutorSessions = async(req: any, res: Response, next: NextFunction) => {
     try {
-      const tutorId = req.user.id  // auth middleware থেকে আসবে
+      const tutorId = req.user.id  
+ console.log("GET SESSIONS → userId:", req.user?.id);
+
 
       const bookings = await tutorsService.getTutorSessions(tutorId)
 
@@ -157,14 +221,16 @@ const createTutors = async(req:Request, res:Response, next:NextFunction)=>{
     const updatedProfile = await tutorsService.updateTutorProfile(req.user.id, {
       bio,
       price,
-      subject,     // string[]
-      categoryId,  // single category
+      subject,     
+      categoryId, 
     });
 
-    res.json({
-      message: "Tutor profile updated successfully",
-      profile: updatedProfile,
-    });
+   res.json({
+  success: true,
+  message: "Tutor profile updated successfully",
+  data: updatedProfile,
+});
+
   } catch (err) {
     next(err);
   }
@@ -181,5 +247,7 @@ export const tutorControler = {
     createTutors,
     updateProfile,
     updateAvailability,
-    getTutorSessions
+    getTutorSessions,
+    getAvailability,
+    getTutorReviews
 }

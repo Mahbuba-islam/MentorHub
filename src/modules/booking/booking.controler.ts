@@ -31,7 +31,6 @@ const getAllBookings = async (req:Request, res:Response, next:NextFunction) => {
 
 
 
-
 const createBooking = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.user) {
@@ -46,11 +45,11 @@ const createBooking = async (req: Request, res: Response, next: NextFunction) =>
     }
 
     const booking = await bookingService.createBooking({
-      tutorId: req.body.tutorId,
+      tutorId: req.body.tutorId,  
       date: req.body.date,
       startTime: req.body.startTime,
       endTime: req.body.endTime,
-      studentId: req.user.id, // session থেকে
+      studentId: req.user.id,
     });
 
     res.status(201).json({ success: true, data: booking });
