@@ -34,7 +34,7 @@ app.get("/", (req, res)=> {
 })
 
 app.use("/tutors", tutorRouter)
-app.use("/review", reviewRouter)
+app.use("/reviews", reviewRouter)
 app.use('/categories', categoryRouter)
 app.use("/bookings", bookingRouter)
 app.use("/student/profile", studentsRouter)
