@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 
 
 
+
 //get tutors
 const getTutors = async (payload: {
   search?: string | undefined,
@@ -50,10 +51,11 @@ const getTutors = async (payload: {
           : {}
       ]
     },
-     include: {
-      category: true
-    }
 
+    include: {
+      category: true,
+      user: true,  
+    }
   });
 };
 

@@ -6,7 +6,7 @@ import auth, { userRole } from "../../middlewares/auth";
 const router = Router()
 
 
-router.post("/", auth(userRole.USER), bookingControler.createBooking)
-router.get("/", auth(), bookingControler.getAllBookings)
+router.post("/", auth(),  bookingControler.createBooking)
+router.get("/",  auth(), bookingControler.getAllBookings)
 
 export const bookingRouter = router

@@ -39,7 +39,92 @@ const updateProfile = async (
   });
 };
 
+
+//get upcoming session
+const upComingBookings = async(studentId:string)=> {
+const bookings = await prisma.booking.findMany({
+      where: {
+        studentId,
+        date: {
+          gte: new Date(), 
+        },
+      },
+      include: {
+        tutor: true,
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+
+return bookings
+}
+
+
+
+
+const getPastBookings = async(studentId:string)=> {
+const bookings = await prisma.booking.findMany({
+      where: {
+        studentId,
+        date: {
+          lt: new Date(), 
+        },
+      },
+      include: {
+        tutor: true,
+      },
+      orderBy: {
+        date: "asc",
+      },
+    });
+
+return bookings
+}
+
+
+// bookings status change
+
+const markCompleted = async (bookingId: string, studentId: string) => {
+  // 1. Find booking
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+  });
+
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+
+  // 2. Ownership check
+  if (booking.studentId !== studentId) {
+    throw new Error("Unauthorized");
+  }
+
+  // 3. Already completed check
+  if (booking.status === "COMPLETED") {
+    throw new Error("Already completed");
+  }
+
+  // 4. Update status
+  const updated = await prisma.booking.update({
+    where: { id: bookingId },
+    data: { status: "COMPLETED" },
+  });
+
+  return updated;
+};
+
+export const bookingService = {
+  markCompleted,
+};
+
+
+
+
 export const studentService = {
   getProfile,
- updateProfile
+ updateProfile,
+ upComingBookings,
+ getPastBookings,
+ markCompleted
 }

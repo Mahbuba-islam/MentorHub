@@ -36,7 +36,7 @@ const createBooking = async (req: Request, res: Response, next: NextFunction) =>
     if (!req.user) {
       return res.status(400).json({ error: "Unauthorized" });
     }
-
+console.log('id......',req.user.id);
     if (req.user.role !== userRole.USER) {
       return res.status(400).json({
         success: false,
@@ -44,13 +44,7 @@ const createBooking = async (req: Request, res: Response, next: NextFunction) =>
       });
     }
 
-    const booking = await bookingService.createBooking({
-      tutorId: req.body.tutorId,  
-      date: req.body.date,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
-      studentId: req.user.id,
-    });
+    const booking = await bookingService.createBooking(req.body, req.user.id);
 
     res.status(201).json({ success: true, data: booking });
   } catch (error) {
