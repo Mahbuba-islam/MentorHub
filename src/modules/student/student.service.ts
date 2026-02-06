@@ -19,25 +19,28 @@ import { prisma } from "../../lib/prisma";
 
 const updateProfile = async (
   userId: string,
-  data: { name?: string; email?: string; image?: string; bio?: string }
+  data: { name?: string; email?: string; image?: string; bio?: string, phone:string }
 ) => {
   return prisma.user.update({
     where: { id: userId },
-    data: {
-      ...(data.name && { name: data.name }),
-      ...(data.email && { email: data.email }),
-      ...(data.image && { image: data.image }),
-      ...(data.bio && { bio: data.bio })
-    },
+   data: {
+  ...(data.name !== undefined && { name: data.name }),
+  ...(data.email !== undefined && { email: data.email }),
+  ...(data.image !== undefined && { image: data.image }),
+  ...(data.bio !== undefined && { bio: data.bio }),
+  ...(data.phone !== undefined && { phone: data.phone ?? "" })
+},
+
     select: {
       id: true,
       name: true,
       email: true,
       image: true,
-     
-    }
+      phone:true
+    },
   });
 };
+
 
 
 //get upcoming session
@@ -49,9 +52,14 @@ const bookings = await prisma.booking.findMany({
           gte: new Date(), 
         },
       },
-      include: {
-        tutor: true,
-      },
+     include: {
+  tutor: {
+    include: {
+      user: true
+    }
+  }
+},
+      
       orderBy: {
         date: "asc",
       },
@@ -72,8 +80,12 @@ const bookings = await prisma.booking.findMany({
         },
       },
       include: {
-        tutor: true,
-      },
+      tutor: {
+      include: {
+      user: true
+     }
+   }
+  },
       orderBy: {
         date: "asc",
       },
@@ -121,10 +133,26 @@ export const bookingService = {
 
 
 
+
+ 
+  const deleteAccount = async (userId: string) => {
+  try {
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return { success: true };
+  } catch (error) {
+    return { success: false, message: "Failed to delete account" };
+  }
+};
+
+
 export const studentService = {
   getProfile,
  updateProfile,
  upComingBookings,
  getPastBookings,
- markCompleted
+ markCompleted,
+ deleteAccount
 }

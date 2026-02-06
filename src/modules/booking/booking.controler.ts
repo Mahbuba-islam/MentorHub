@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express"
 import { bookingService } from "./booking.service";
 import { userRole } from "../../middlewares/auth";
 
-
 //get booking with upcoming and past
 const getAllBookings = async (req:Request, res:Response, next:NextFunction) => {
   try {
@@ -13,13 +12,7 @@ const getAllBookings = async (req:Request, res:Response, next:NextFunction) => {
       })
     }
 
-
-    // if (req.user.role !== userRole.USER) {
-    //   return res.status(403).json({ message: "Only students can view bookings" });
-    // }
-
-
-    const bookings = await bookingService.getAllBookingsForStudent();
+ const bookings = await bookingService.getAllBookingsForStudent();
 
     res.status(200).json({ success: true, data: bookings });
   } catch (error) {
@@ -53,7 +46,31 @@ console.log('id......',req.user.id);
 };
 
 
+
+  const deleteBooking = async(req: Request, res: Response, next: NextFunction)=> {
+     console.log("DELETE HIT", req.params);
+console.log("COOKIES:", req.cookies);
+
+    try {
+      const { id } = req.params;
+     console.log("DELETE HITmmmm", id);
+
+      await bookingService.deleteBooking(id as string);
+
+      return res.status(200).json({
+        success: true,
+        message: "Booking deleted successfully",
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+
+
+
 export const bookingControler = {
   getAllBookings,
-    createBooking
+  createBooking,
+  deleteBooking
 }

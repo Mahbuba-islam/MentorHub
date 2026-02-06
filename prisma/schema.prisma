@@ -7,21 +7,9 @@ generator client {
   output   = "../src/generated"
 }
 
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// -----------------------------
-// Database Connection
-// -----------------------------
-
 datasource db {
   provider = "postgresql"
 }
-
-// -----------------------------
-// Enums
-// -----------------------------
 
 // TUTOR PROFILE
 
@@ -67,10 +55,10 @@ model Booking {
   id String @id @default(uuid())
 
   studentId String
-  student   User   @relation("StudentBookings", fields: [studentId], references: [id])
+  student   User   @relation("StudentBookings", fields: [studentId], references: [id], onDelete: Cascade)
 
   tutorId String
-  tutor   TutorProfile @relation(fields: [tutorId], references: [id])
+  tutor   TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
 
   date      DateTime
   startTime String
@@ -80,7 +68,7 @@ model Booking {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user      User?    @relation(fields: [userId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String?
   reviews   Review[]
 
@@ -100,13 +88,13 @@ enum BookingStatus {
 model Review {
   id        String @id @default(uuid())
   studentId String
-  student   User   @relation(fields: [studentId], references: [id])
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   tutorId String
-  tutor   TutorProfile @relation(fields: [tutorId], references: [id])
+  tutor   TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
 
   bookingId String
-  booking   Booking @relation(fields: [bookingId], references: [id])
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 
   rating    Int
   comment   String?

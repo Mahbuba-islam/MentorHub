@@ -7,7 +7,8 @@ import { tutorsService } from "./tutors.service"
 const getTutors = async(req:Request, res:Response, next:NextFunction)=>{
  try{
   const {search} = req.query
-  const categoryName = req.query.category 
+  const categoryName = req.query.categoryName 
+  console.log(req.query);
   const searchString = typeof search === 'string' ? search  : undefined
   const categoryString = typeof categoryName === 'string' ? categoryName : undefined
   console.log('search', search);
@@ -47,8 +48,10 @@ const getTutorDetails = async(req:Request, res:Response, next:NextFunction)=> {
 
  const getFeaturedTutors = async (req: Request, res: Response, next:NextFunction) => {
   try {
-    const tutors = await tutorsService.findFeaturedTutors();
-    res.status(200).json({ success: true, data: tutors });
+   
+  const results = await tutorsService.findFeaturedTutors()
+   res.status(201).json(results)
+    
   } catch (error) {
     next(error)
   }
@@ -147,7 +150,7 @@ const updateAvailability = async (req: Request, res: Response, next:NextFunction
 
 //create tutors
 
-// create tutors
+
 const createTutors = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
@@ -159,18 +162,20 @@ const createTutors = async (req: Request, res: Response, next: NextFunction) => 
       });
     }
 
+    
     const results = await tutorsService.createTutors(req.body, user.id);
 
     return res.status(201).json({
       success: true,
       message: "Tutor profile created successfully",
-      data: results, 
+      data: results,
     });
 
   } catch (error) {
     next(error);
   }
 };
+
 
 
 
@@ -184,7 +189,7 @@ const getTutorReviews = async (req: any, res: Response, next: NextFunction) => {
     }
 
     const userId = req.user.id;
-
+    console.log('IdDDDD',userId);
     const reviews = await tutorsService.getTutorReviews(userId);
 
     return res.status(200).json({
@@ -258,3 +263,4 @@ export const tutorControler = {
     getAvailability,
     getTutorReviews
 }
+

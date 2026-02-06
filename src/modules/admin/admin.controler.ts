@@ -61,8 +61,7 @@ import { adminService } from "./admin.service";
 
 
 
-  // manage category
-
+  
  
   // Create category
   const createCategory = async(req: Request, res: Response)=> {
@@ -131,6 +130,3 @@ import { adminService } from "./admin.service";
    
 }
 
-function getAllUsersService() {
-  throw new Error("Function not implemented.");
-}

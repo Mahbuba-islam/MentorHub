@@ -14,5 +14,6 @@ router.put(
 );
 
 router.put("/update-profile", auth(userRole.USER), studentControler.updateProfile)
+router.delete("/delete-profile", auth(), studentControler.deleteAccount)
 
 export const studentsRouter = router

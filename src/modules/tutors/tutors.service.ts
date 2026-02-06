@@ -97,22 +97,19 @@ const getTutorDetails = async (id: string) => {
 // featured tutors
 
  const findFeaturedTutors = async () => {
+  
   return prisma.tutorProfile.findMany({
-    where: { isFeatured: true },
-    include: {
-      user: {
-        select: { name: true, email: true, image: true }
-      },
-      category: {
-        select: { name: true }
-      }
+    where: {
+      isFeatured: true
+     
     },
-    orderBy: { rating: "desc" }
+
+    include: {
+      category: true,
+      user: true,
+    },
   });
 };
-
-
-
 
 //get tutor dashboard data
 
@@ -186,16 +183,8 @@ const createTutors = async (data: TutorProfile, userId: string) => {
 
 
 
-//tutor sessions
-
  
-  
-
-
-
-
-
-// update tutors 
+  // update tutors 
 
 const updateTutorProfile = async (
   userId: string,
@@ -221,25 +210,19 @@ const updateTutorProfile = async (
 const getTutorReviews = async (userId: string) => {
   const profile = await prisma.tutorProfile.findUnique({
     where: { userId },
+    select: { id: true },
   });
 
   if (!profile) throw new Error("Tutor profile not found");
 
   return prisma.review.findMany({
     where: { tutorId: profile.id },
-    orderBy: { createdAt: "desc" },
     include: {
-      student: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
+      student: true,
     },
+    orderBy: { createdAt: "desc" },
   });
 };
-
 
 
 

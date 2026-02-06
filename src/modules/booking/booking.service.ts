@@ -1,8 +1,7 @@
 
 
+import { Booking } from "../../generated/client";
 import { prisma } from "../../lib/prisma";
-import { BookingCreateInput } from "../../utils/bookingType";
-
 
 
 
@@ -31,7 +30,7 @@ const getAllBookingsForStudent = async () => {
 
 
 
-const createBooking = async (data, studentId) => {
+const createBooking = async (data:Booking, studentId:string) => {
   return prisma.booking.create({
     data: {
       tutorId: data.tutorId,
@@ -45,7 +44,20 @@ const createBooking = async (data, studentId) => {
 };
 
 
+
+
+
+  const deleteBooking = async(id: string) => {
+    return await prisma.booking.delete({
+      where: { id },
+    });
+  }
+
+ 
+
+
 export const bookingService = {
     getAllBookingsForStudent,
-    createBooking
+    createBooking,
+    deleteBooking
 }

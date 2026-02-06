@@ -13,7 +13,7 @@ const createReview = async (studentId: string, data: any) => {
   if (booking.studentId !== studentId) throw new Error("Unauthorized");
 
   // ⭐ Allow review only if session is completed OR past
-  if (booking.status !== "COMPLETED" && booking.status !== "DONE") {
+  if (booking.status !== "COMPLETED") {
     throw new Error("Session not completed");
   }
 
@@ -53,7 +53,7 @@ const createReview = async (studentId: string, data: any) => {
     data: {
       rating: stats._avg.rating || 0,
       totalReviews: stats._count.rating,
-       isFeatured: (stats._avg.rating || 0) > 4, 
+      //  isFeatured: (stats._avg.rating || 0) > 4, 
 
     },
   });

@@ -6,7 +6,7 @@ const router = Router()
 
 router.get("/", tutorControler.getTutors)
 router.get("/sessions", auth(),tutorControler.getTutorSessions)
-router.get("/reviews", auth(),tutorControler.getTutorSessions)
+router.get("/reviews", auth(),tutorControler.getTutorReviews)
 
 
 router.get("/availability", auth(), tutorControler.getAvailability)

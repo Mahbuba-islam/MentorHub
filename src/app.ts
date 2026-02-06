@@ -12,13 +12,18 @@ import { categoryRouter } from "./modules/category/category.router"
 import { bookingRouter } from "./modules/booking/booking.router"
 import { reviewRouter } from "./modules/review/review.router"
 
+import { authenticationRouter } from "./modules/authimtecation/authentication.router"
+
 const app = express()
 
-app.use(cors({
-    origin:process.env.APP_URL || "http://localhost:3000",
-    credentials:true
-
-}))
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 
 app.all("/api/auth/*splat", toNodeHandler(auth));
@@ -38,9 +43,11 @@ app.use("/reviews", reviewRouter)
 app.use('/categories', categoryRouter)
 app.use("/bookings", bookingRouter)
 app.use("/student", studentsRouter)
+app.use("/auth", authenticationRouter)
 app.use("/admin", adminRouter)
 app.use(notFound)
 app.use(errorHandler)
+
 
 
 export default app;

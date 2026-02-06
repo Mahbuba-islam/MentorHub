@@ -40,12 +40,7 @@ try{
         })
     }
 
-    // if(!session.user.emailVerified){
-    //       return res.status(403).json({
-    //         success:false,
-    //         message:"Email verification required. please verify your email!"
-    //     })
-    // }
+   
 
    req.user = {
     id: session.user.id,
