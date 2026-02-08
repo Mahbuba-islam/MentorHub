@@ -16,7 +16,7 @@ router.get("/featured", tutorControler.getFeaturedTutors);
 
 router.get("/:id", tutorControler.getTutorDetails);
 
-router.post("/", auth(), tutorControler.createTutors)
+router.post("/create", auth(), tutorControler.createTutors)
 router.post("/availability", auth(), tutorControler.updateAvailability)
 
 

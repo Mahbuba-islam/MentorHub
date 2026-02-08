@@ -154,6 +154,8 @@ const updateAvailability = async (req: Request, res: Response, next:NextFunction
 const createTutors = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
+console.log("REQ COOKIES:", req.cookies);
+console.log("REQ USER:", req.user);
 
     if (!user) {
       return res.status(400).json({
@@ -164,7 +166,7 @@ const createTutors = async (req: Request, res: Response, next: NextFunction) => 
 
     
     const results = await tutorsService.createTutors(req.body, user.id);
-
+console.log('tutor profile', results);
     return res.status(201).json({
       success: true,
       message: "Tutor profile created successfully",
@@ -175,7 +177,6 @@ const createTutors = async (req: Request, res: Response, next: NextFunction) => 
     next(error);
   }
 };
-
 
 
 
@@ -228,13 +229,14 @@ const getTutorReviews = async (req: any, res: Response, next: NextFunction) => {
 //update
  const updateProfile = async (req: any, res: Response, next: NextFunction) => {
   try {
-    const { bio, price, subject, categoryId } = req.body;
+    const { bio, price, subject, categoryId , isFeatured} = req.body;
 
     const updatedProfile = await tutorsService.updateTutorProfile(req.user.id, {
       bio,
       price,
       subject,     
       categoryId, 
+      isFeatured
     });
 
    res.json({

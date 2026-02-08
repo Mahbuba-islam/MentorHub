@@ -1,5 +1,5 @@
-import { TutorProfile } from "@prisma/client";
 import { prisma } from "../../lib/prisma";
+import { CreateTutorProfileInput } from "../../utils/tutor.types";
 
 
 
@@ -164,40 +164,24 @@ const getTutorDetails = async (id: string) => {
 };
 
 
-//create tutors
 
-const createTutors = async (data: TutorProfile, userId: string) => {
-  const results = await prisma.tutorProfile.create({
-    data: {
-      ...data,
-      userId: userId
-    },
-    include: {
-      user: true,        
-      category: true     
-    }
-  });
-
-  return results;
-};
-
-
-
- 
-  // update tutors 
-
-const updateTutorProfile = async (
-  userId: string,
-  data: { bio?: string; price?: number; subject?: string[]; categoryId?: string }
+const createTutors = async (
+  raw: CreateTutorProfileInput,
+  userId: string
 ) => {
-  return prisma.tutorProfile.update({
-    where: { userId },
-    data: {
-      ...(data.bio !== undefined && { bio: data.bio }),
-      ...(data.price !== undefined && { price: data.price }),
-      ...(data.categoryId && { categoryId: data.categoryId }),
-      ...(data.subject && { subject: data.subject }), // string[]
-    },
+  const data: CreateTutorProfileInput & { userId: string } = {
+    bio: raw.bio ?? null,
+    price: raw.price !== undefined ? Number(raw.price) : null,
+    categoryId: raw.categoryId,
+    isFeatured: raw.isFeatured ?? false,
+    subject: Array.isArray(raw.subject) ? raw.subject : [],
+    userId,
+  };
+
+  console.log("FINAL DATA SENT TO PRISMA:", data);
+
+  return prisma.tutorProfile.create({
+    data,
     include: {
       user: true,
       category: true,
@@ -205,6 +189,38 @@ const updateTutorProfile = async (
   });
 };
 
+ 
+  // update tutors 
+
+const updateTutorProfile = async (
+  userId: string,
+  raw: {
+    bio?: string;
+    price?: number;
+    subject?: string[];
+    categoryId?: string;
+    isFeatured?: boolean;
+  }
+) => {
+  const data: any = {};
+
+  if (raw.bio !== undefined) data.bio = raw.bio;
+  if (raw.price !== undefined) data.price = Number(raw.price);
+  if (raw.categoryId !== undefined) data.categoryId = raw.categoryId;
+  if (Array.isArray(raw.subject)) data.subject = raw.subject;
+  if (raw.isFeatured !== undefined) data.isFeatured = raw.isFeatured;
+
+  console.log("FINAL UPDATE DATA:", data);
+
+  return prisma.tutorProfile.update({
+    where: { userId },
+    data,
+    include: {
+      user: true,
+      category: true,
+    },
+  });
+};
 
 
 const getTutorReviews = async (userId: string) => {

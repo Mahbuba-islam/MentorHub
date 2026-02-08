@@ -18,14 +18,13 @@ const app = express()
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://mentor-hub-client-rjzhykw5a-mahbubaislams-projects.vercel.app"
+    ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(express.json())
