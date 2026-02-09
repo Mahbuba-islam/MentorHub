@@ -9,7 +9,6 @@ export const auth = betterAuth({
 
   // ✅ SAFE for local + prod
  trustedOrigins: [
-  "http://localhost:3000",
   "https://mentor-hub-client.vercel.app"
 ].filter(Boolean),
 
