@@ -1521,6 +1521,20 @@ app.use("/admin", adminRouter);
 app.use(notFound);
 app.use(errorHandler);
 var index_default = app;
-export {
-  index_default as default
-};
+
+// src/server.ts
+var PORT = process.env.PORT || 5e3;
+async function main() {
+  try {
+    await prisma.$connect();
+    console.log("coonnected to database");
+    index_default.listen(PORT, () => {
+      console.log(`server is running on port ${PORT}`);
+    });
+  } catch (err) {
+    console.log(err);
+    await prisma.$disconnect();
+    process.exit(1);
+  }
+}
+main();
