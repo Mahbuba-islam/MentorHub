@@ -15,7 +15,6 @@ import { reviewRouter } from "./modules/review/review.router"
 import { authenticationRouter } from "./modules/authimtecation/authentication.router"
 
 const app = express()
-
 app.use(
   cors({
     origin: [
@@ -23,11 +22,19 @@ app.use(
       "https://mentor-hub-client.vercel.app"
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
   })
 );
+
+// ⭐ 2) Allow OPTIONS preflight
+app.options("*", cors());
+
+// ⭐ 3) JSON parser
+app.use(express.json());
+
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
-app.use(express.json())
 
 
 
