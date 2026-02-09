@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://mentor-hub-client-rjzhykw5a-mahbubaislams-projects.vercel.app"
+      "https://mentor-hub-client.vercel.app"
     ],
     credentials: true,
   })
