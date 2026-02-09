@@ -2,12 +2,12 @@
   "name": "mentorhub",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.ts",
+  "main": "api/server.js",
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "start": "node api/server.js",
     "build": "prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir api --external pg-native",
+    "start": "node api/server.js",
     "seed:admin": "tsx src/seedAdmin.ts",
     "postinstall": "prisma generate"
   },
