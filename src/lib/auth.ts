@@ -7,12 +7,11 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
- trustedOrigins:["https://mentor-hub-client.vercel.app"],
- 
   
- 
-
-
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://mentor-hub-client.vercel.app"
+  ],
 
   user: {
     additionalFields: {
@@ -38,13 +37,14 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
 
+  
   cookies: {
     sessionToken: {
       name: "better-auth-session",
       options: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production", 
-        sameSite: "lax",
+        secure: true,          
+        sameSite: "none",      
         path: "/",
       },
     },
