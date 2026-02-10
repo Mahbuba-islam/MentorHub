@@ -7,10 +7,10 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
-  // ✅ SAFE for local + prod
- trustedOrigins: [
-  "https://mentor-hub-client.vercel.app"
-].filter(Boolean),
+ trustedOrigins:["https://mentor-hub-client.vercel.app"],
+ 
+  
+ 
 
 
 
