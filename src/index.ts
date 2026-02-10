@@ -16,12 +16,12 @@ import { notFound } from "./middlewares/notFound";
 
 const app = express();
 
-// ⭐ 1) GLOBAL CORS — MUST BE FIRST
+// GLOBAL CORS 
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
       "https://mentor-hub-client.vercel.app",
+      "http://localhost:3000"
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -30,28 +30,30 @@ app.use(
   })
 );
 
-// ⭐ 2) Preflight
+//  Preflight
 app.options("*", cors());
 
-// ⭐ 3) JSON parser
+//  JSON parser
 app.use(express.json());
 
-// ⭐ 4) BetterAuth needs its OWN CORS (VERY IMPORTANT)
+//BetterAuth needs its OWN CORS 
 app.use(
   "/api/auth",
   cors({
     origin: [
-      "http://localhost:3000",
       "https://mentor-hub-client.vercel.app",
+       "http://localhost:3000",
     ],
     credentials: true,
   })
 );
 
-// ⭐ 5) BetterAuth handler
-app.use("/api/auth/*splat", toNodeHandler(auth));
 
-// ⭐ 6) Other routes
+//  BetterAuth handler
+app.all("/api/auth/*splat", toNodeHandler(auth));
+
+
+//  Other routes
 app.get("/", (req, res) => {
   res.send("hello world");
 });
@@ -64,11 +66,10 @@ app.use("/student", studentsRouter);
 app.use("/auth", authenticationRouter);
 app.use("/admin", adminRouter);
 
-// ⭐ 7) Error handlers
+// Error handlers
 app.use(notFound);
 app.use(errorHandler);
 
 export default app;
 
 
-// app.all("/api/auth/*splat", toNodeHandler(auth));

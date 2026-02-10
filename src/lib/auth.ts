@@ -9,8 +9,8 @@ export const auth = betterAuth({
 
   
   trustedOrigins: [
-    "http://localhost:3000",
-    "https://mentor-hub-client.vercel.app"
+    "https://mentor-hub-client.vercel.app",
+     "http://localhost:3000",
   ],
 
   user: {
