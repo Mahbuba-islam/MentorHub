@@ -24,9 +24,7 @@ app.use(
       "http://localhost:3000"
     ],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
-    exposedHeaders: ["Set-Cookie"],
+   
   })
 );
 
@@ -37,16 +35,16 @@ app.options("*", cors());
 app.use(express.json());
 
 //BetterAuth needs its OWN CORS 
-app.use(
-  "/api/auth",
-  cors({
-    origin: [
-      "https://mentor-hub-client.vercel.app",
-       "http://localhost:3000",
-    ],
-    credentials: true,
-  })
-);
+// app.use(
+//   "/api/auth",
+//   cors({
+//     origin: [
+//       "https://mentor-hub-client.vercel.app",
+//        "http://localhost:3000",
+//     ],
+//     credentials: true,
+//   })
+// );
 
 
 //  BetterAuth handler
