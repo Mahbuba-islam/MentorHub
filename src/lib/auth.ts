@@ -7,10 +7,21 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
-  
+  // ⭐ CORS FIX (MOST IMPORTANT)
+  cors: {
+    origin: [
+      "https://mentor-hub-client.vercel.app",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  },
+
+  // ⭐ CSRF protection
   trustedOrigins: [
     "https://mentor-hub-client.vercel.app",
-     "http://localhost:3000",
+    "http://localhost:3000",
   ],
 
   user: {
@@ -37,14 +48,13 @@ export const auth = betterAuth({
     requireEmailVerification: false,
   },
 
-  
   cookies: {
     sessionToken: {
       name: "better-auth-session",
       options: {
         httpOnly: true,
-        secure: true,          
-        sameSite: "none",      
+        secure: true,
+        sameSite: "none",
         path: "/",
       },
     },
