@@ -37,7 +37,7 @@ app.use(express.json());
 
 // ⭐ BetterAuth-specific CORS
 app.use(
-  "/api/auth",
+  "/api/auth/*splat",
   cors({
     origin: [
       "https://mentor-hub-client.vercel.app",
@@ -50,7 +50,7 @@ app.use(
 );
 
 // ⭐ BetterAuth handler
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 // Other routes
 app.get("/", (req, res) => {
