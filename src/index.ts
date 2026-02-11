@@ -29,19 +29,27 @@ app.use(
   })
 );
 
-// ⭐ Preflight handler (correct version)
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  return res.sendStatus(200);
-});
+// ❌ REMOVE THIS — THIS WAS BREAKING EVERYTHING
+// app.options("*", ...);
 
 // JSON parser
 app.use(express.json());
 
-// ⭐ BetterAuth handler (must come AFTER CORS)
+// ⭐ BetterAuth-specific CORS
+app.use(
+  "/api/auth",
+  cors({
+    origin: [
+      "https://mentor-hub-client.vercel.app",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// ⭐ BetterAuth handler
 app.all("/api/auth/*", toNodeHandler(auth));
 
 // Other routes
@@ -62,6 +70,5 @@ app.use(notFound);
 app.use(errorHandler);
 
 export default app;
-
 
 // app.all("/api/auth/*splat", toNodeHandler(auth));
