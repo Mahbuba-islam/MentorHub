@@ -46,6 +46,7 @@ app.use(express.json());
 //   })
 // );
 
+app.use('/api/auth/sign-up/email')
 
 //  BetterAuth handler
 app.all("/api/auth/*splat", toNodeHandler(auth));
