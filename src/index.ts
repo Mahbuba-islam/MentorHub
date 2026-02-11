@@ -48,7 +48,8 @@ app.use(express.json());
 
 
 //  BetterAuth handler
-app.all("/api/auth/*splat", toNodeHandler(auth));
+// app.all("/api/auth/*splat", toNodeHandler(auth));
+app.all("/api/auth/*", toNodeHandler(auth));
 
 
 //  Other routes
