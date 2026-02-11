@@ -16,43 +16,35 @@ import { notFound } from "./middlewares/notFound";
 
 const app = express();
 
-// GLOBAL CORS 
+// ⭐ GLOBAL CORS (must be FIRST)
 app.use(
   cors({
     origin: [
       "https://mentor-hub-client.vercel.app",
-      "http://localhost:3000"
+      "http://localhost:3000",
     ],
     credentials: true,
-   allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-//  Preflight
-app.options("*", cors());
+// ⭐ Preflight handler (correct version)
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return res.sendStatus(200);
+});
 
-//  JSON parser
+// JSON parser
 app.use(express.json());
 
-//BetterAuth needs its OWN CORS 
-// app.use(
-//   "/api/auth",
-//   cors({
-//     origin: [
-//       "https://mentor-hub-client.vercel.app",
-//        "http://localhost:3000",
-//     ],
-//     credentials: true,
-//   })
-// );
-
-
-//  BetterAuth handler
-// app.all("/api/auth/*splat", toNodeHandler(auth));
+// ⭐ BetterAuth handler (must come AFTER CORS)
 app.all("/api/auth/*", toNodeHandler(auth));
 
-
-//  Other routes
+// Other routes
 app.get("/", (req, res) => {
   res.send("hello world");
 });
@@ -72,3 +64,4 @@ app.use(errorHandler);
 export default app;
 
 
+// app.all("/api/auth/*splat", toNodeHandler(auth));
