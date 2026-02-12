@@ -70,6 +70,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,   // ⭐ REQUIRED ⭐
+
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -84,12 +86,8 @@ export const auth = betterAuth({
     allowedHeaders: ["Content-Type", "Authorization"],
   },
 
-
-   trustedOrigins: [],
-
-
-  // ⭐ FIX — Server Actions NEVER send Origin → disable CSRF
-  csrf: false,
+  trustedOrigins: [],   // allow server actions
+  csrf: false,          // disable CSRF
 
   user: {
     additionalFields: {
