@@ -84,6 +84,10 @@ export const auth = betterAuth({
     allowedHeaders: ["Content-Type", "Authorization"],
   },
 
+
+   trustedOrigins: [],
+
+
   // ⭐ FIX — Server Actions NEVER send Origin → disable CSRF
   csrf: false,
 
