@@ -19,10 +19,10 @@ export const auth = betterAuth({
   },
 
   // ⭐ CSRF protection
-  trustedOrigins: [
-    "https://mentor-hub-client.vercel.app",
-    "http://localhost:3000",
-  ],
+  // trustedOrigins: [
+  //   "https://mentor-hub-client.vercel.app",
+  //   "http://localhost:3000",
+  // ],
 
   user: {
     additionalFields: {
