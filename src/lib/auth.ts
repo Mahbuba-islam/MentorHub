@@ -85,19 +85,25 @@ export const auth = betterAuth({
   }),
 
   // ⭐ Better Auth checks the Origin header against this list.
-  // Without it you get: "Missing or null Origin".
   trustedOrigins: FRONTEND_URLS,
 
   advanced: {
-    // Cross-site cookies require SameSite=None; Secure
+    // Force the Secure flag in all environments (Render serves over HTTPS,
+    // Vercel frontend is HTTPS-only — required for SameSite=None).
+    useSecureCookies: true,
+
+    // The frontend reaches this API through a Next.js server route / server
+    // action, so the request arrives without a browser `Origin` header and
+    // Better Auth would otherwise reject it with "Missing or null Origin".
+    // CORS (in `index.ts`) already restricts which browser origins can hit us.
+    disableCSRFCheck: true,
+
+    // Cross-site cookies (vercel.app → onrender.com) require SameSite=None; Secure.
     defaultCookieAttributes: {
       sameSite: "none",
       secure: true,
       httpOnly: true,
       path: "/",
-    },
-    crossSubDomainCookies: {
-      enabled: false,
     },
   },
 
