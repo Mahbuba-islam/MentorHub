@@ -69,25 +69,37 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 
+const FRONTEND_URLS = [
+  process.env.FRONTEND_URL,
+  process.env.CORS_ORIGIN,
+  "https://mentor-hub-client.vercel.app",
+  "http://localhost:3000",
+].filter((u): u is string => Boolean(u));
+
 export const auth = betterAuth({
-  baseURL: process.env.BETTER_AUTH_URL,   // ⭐ REQUIRED ⭐
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
 
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
 
-  cors: {
-    origin: [
-      "https://mentor-hub-client.vercel.app",
-      "http://localhost:3000",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  },
+  // ⭐ Better Auth checks the Origin header against this list.
+  // Without it you get: "Missing or null Origin".
+  trustedOrigins: FRONTEND_URLS,
 
-  trustedOrigins: [],   // allow server actions
-  csrf: false,          // disable CSRF
+  advanced: {
+    // Cross-site cookies require SameSite=None; Secure
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+      httpOnly: true,
+      path: "/",
+    },
+    crossSubDomainCookies: {
+      enabled: false,
+    },
+  },
 
   user: {
     additionalFields: {
@@ -111,17 +123,5 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
-  },
-
-  cookies: {
-    sessionToken: {
-      name: "better-auth-session",
-      options: {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-      },
-    },
   },
 });

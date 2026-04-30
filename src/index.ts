@@ -16,41 +16,36 @@ import { notFound } from "./middlewares/notFound";
 
 const app = express();
 
-// ⭐ GLOBAL CORS (must be FIRST)
-app.use(
-  cors({
-    origin: [
-      "https://mentor-hub-client.vercel.app",
-      "http://localhost:3000",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// ⭐ Allowed origins (env-driven so Render can override)
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.CORS_ORIGIN,
+  "https://mentor-hub-client.vercel.app",
+  "http://localhost:3000",
+].filter((u): u is string => Boolean(u));
 
-// ❌ REMOVE THIS — THIS WAS BREAKING EVERYTHING
-// app.options("*", ...);
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Allow same-origin / server-to-server (no Origin header)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+};
 
-// JSON parser
-app.use(express.json());
+// ⭐ GLOBAL CORS (must be FIRST, and must handle preflight)
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
-// ⭐ BetterAuth-specific CORS
-app.use(
-  "/api/auth/*splat",
-  cors({
-    origin: [
-      "https://mentor-hub-client.vercel.app",
-      "http://localhost:3000",
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-// ⭐ BetterAuth handler
+// ⭐ BetterAuth handler — MUST be mounted BEFORE express.json()
+// because Better Auth reads the raw request stream itself.
 app.all("/api/auth/*splat", toNodeHandler(auth));
+
+// JSON parser (after the auth handler)
+app.use(express.json());
 
 // Other routes
 app.get("/", (req, res) => {
