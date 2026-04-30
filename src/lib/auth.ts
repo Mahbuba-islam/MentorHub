@@ -97,6 +97,7 @@ export const auth = betterAuth({
     // Better Auth would otherwise reject it with "Missing or null Origin".
     // CORS (in `index.ts`) already restricts which browser origins can hit us.
     disableCSRFCheck: true,
+    disableOriginCheck: true,
 
     // Cross-site cookies (vercel.app → onrender.com) require SameSite=None; Secure.
     defaultCookieAttributes: {
