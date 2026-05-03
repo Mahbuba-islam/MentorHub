@@ -38,7 +38,9 @@ const corsOptions: cors.CorsOptions = {
 
 // ⭐ GLOBAL CORS (must be FIRST, and must handle preflight)
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+// Express 5 / path-to-regexp v8 disallows the bare "*" — use a RegExp
+// to match every path for the CORS preflight.
+app.options(/.*/, cors(corsOptions));
 
 // ⭐ Trust the proxy (Render / Vercel) so req.protocol === "https"
 // and Set-Cookie Secure works correctly behind the load balancer.
