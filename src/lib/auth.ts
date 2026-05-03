@@ -69,9 +69,15 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 
+// In production we run on Render (HTTPS) and the frontend is on Vercel (HTTPS).
+// In dev both are http://localhost:* — secure cookies must be off there or
+// the browser will silently drop the Set-Cookie.
+const IS_PROD = process.env.NODE_ENV === "production";
+
 const FRONTEND_URLS = [
   process.env.FRONTEND_URL,
   process.env.CORS_ORIGIN,
+  process.env.BETTER_AUTH_URL, // allow same-origin server-action calls
   "https://mentor-hub-client.vercel.app",
   "http://localhost:3000",
 ].filter((u): u is string => Boolean(u));
@@ -84,28 +90,37 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
-  // ⭐ Better Auth checks the Origin header against this list.
+  // ⭐ Better Auth checks the Origin header against this list. The Express
+  // middleware in `src/index.ts` synthesizes an Origin header for
+  // server-to-server (Next.js Server Action) calls, so this list is what
+  // it gets compared against.
   trustedOrigins: FRONTEND_URLS,
 
   advanced: {
-    // Force the Secure flag in all environments (Render serves over HTTPS,
-    // Vercel frontend is HTTPS-only — required for SameSite=None).
-    useSecureCookies: true,
+    // Render/Vercel serve HTTPS in prod; localhost is plain HTTP in dev.
+    // SameSite=None REQUIRES Secure, so we only enable it in production.
+    useSecureCookies: IS_PROD,
 
-    // The frontend reaches this API through a Next.js server route / server
-    // action, so the request arrives without a browser `Origin` header and
-    // Better Auth would otherwise reject it with "Missing or null Origin".
-    // CORS (in `index.ts`) already restricts which browser origins can hit us.
+    // Belt-and-braces: the Express middleware already injects an Origin
+    // header for server-action calls, so Better Auth's CSRF check would
+    // pass anyway. Keeping this on means a missing Origin is never fatal.
     disableCSRFCheck: true,
-    disableOriginCheck: true,
 
-    // Cross-site cookies (vercel.app → onrender.com) require SameSite=None; Secure.
-    defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
-      httpOnly: true,
-      path: "/",
-    },
+    // Cross-site cookies (vercel.app → onrender.com) require
+    // SameSite=None; Secure in prod. In dev, fall back to "lax".
+    defaultCookieAttributes: IS_PROD
+      ? {
+          sameSite: "none",
+          secure: true,
+          httpOnly: true,
+          path: "/",
+        }
+      : {
+          sameSite: "lax",
+          secure: false,
+          httpOnly: true,
+          path: "/",
+        },
   },
 
   user: {

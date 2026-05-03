@@ -40,6 +40,27 @@ const corsOptions: cors.CorsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
+// ⭐ Trust the proxy (Render / Vercel) so req.protocol === "https"
+// and Set-Cookie Secure works correctly behind the load balancer.
+app.set("trust proxy", 1);
+
+// ⭐ Better Auth's CSRF/origin guard rejects requests without an `Origin`
+// header ("Missing or null Origin"). When the Next.js frontend calls us
+// from a Server Action / Route Handler, the browser Origin is NOT
+// forwarded (it's a server-to-server fetch). We synthesize one here so
+// Better Auth's check has something to compare against `trustedOrigins`.
+// CORS above still restricts which BROWSER origins can reach us.
+app.use("/api/auth", (req, _res, next) => {
+  if (!req.headers.origin) {
+    const synthesized =
+      process.env.FRONTEND_URL ||
+      process.env.CORS_ORIGIN ||
+      "https://mentor-hub-client.vercel.app";
+    req.headers.origin = synthesized;
+  }
+  next();
+});
+
 // ⭐ BetterAuth handler — MUST be mounted BEFORE express.json()
 // because Better Auth reads the raw request stream itself.
 app.all("/api/auth/*splat", toNodeHandler(auth));
